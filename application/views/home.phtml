@@ -1,0 +1,16 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
+<h1>Esta é a Página Inicial</h1>
+<br>
+<?php echo validation_errors();
+if (isset($error)){ ?> 
+<h4 style="color:red"><?php echo $error; ?> </h4>
+<?php } ?> 
+<?php echo form_open('home/login'); ?>
+Login: <br>
+<input type="text" name="login"><br>
+Senha: <br>
+<input type="password" name="senha"><br><br>
+<?php echo form_submit('', 'login');
+echo form_close(); ?>
