@@ -1,5 +1,5 @@
 <?php
-//defined('BASEPATH') or exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Home extends CI_Controller
 {
@@ -23,7 +23,7 @@ class Home extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->Model('Login_model');
+		$this->load->Model('Classroom_model');
 	}
 	public function index()
 	{
@@ -42,26 +42,21 @@ class Home extends CI_Controller
 		} else {
 			$login = $this->input->post('login');
 			$senha = $this->input->post('senha');
-			$query = $this->Login_model->getLogin($login);
+			$query = $this->db->get_where('user', array('email' => $login, 'password' => $senha));
 			$row = $query->row();
 			if (isset($row)) {
-				if ($row->email == $login && $row->password == $senha) {
-					$data['first_name'] = $row->first_name;
-					if ($row->is_admin == 1) {
-						$this->load->view('home_admin.phtml', $data);
-					} else {
-						$this->load->view('home_user.phtml', $data);
-					}
+				$data = array('user_id' => $row->id, 'logged' => true);
+				$this->session->set_userdata($data);
+				if ($row->is_admin == 1) {
+					$this->load->view('home_admin.phtml', $data);
 				} else {
-					$data['error'] = 'Login ou Senha Inválidos';
-					$this->load->view('home.phtml', $data);
+					redirect('user/user', $data);
 				}
 			} else {
 				$data['error'] = 'Login ou Senha Inválidos';
 				$this->load->view('home.phtml', $data);
 			}
 		}
-
 	}
 
 }

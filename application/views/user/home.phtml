@@ -1,0 +1,10 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
+<h1>Bem-Vindo <?php echo $this->db->get_where('user', array('id' => $user_id))->row()->first_name ?></h1>
+<br>
+<p>Esta é a página do usuário</p>
+<?php $this->load->Model('Classroom_model'); ?>
+<?php echo $table; ?>
+<br>
+<button onclick="window.location.href='./user/addClassroom'">Adicionar Turma</button>
