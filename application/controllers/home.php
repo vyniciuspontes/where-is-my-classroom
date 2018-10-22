@@ -27,18 +27,21 @@ class Home extends CI_Controller
 	}
 	public function index()
 	{
-		$this->load->view('home.phtml');
+		$data['table'] = $this->montaTabela();
+		$this->load->view('home.phtml', $data);
 	}
 
 	public function login()
 	{
 		$this->load->library('form_validation');
 		$validLogin = false;
-		if ($this->form_validation->set_rules('login', 'Login', 'trim|required|valid_email'));
-		if ($this->form_validation->set_rules('senha', 'Senha', 'required'));
+		$this->form_validation->set_rules('login', 'Login', 'trim|required|valid_email');
+		$this->form_validation->set_rules('senha', 'Senha', 'required');
 
 		if (!$this->form_validation->run()) {
-			$this->load->view('home.phtml');
+			$this->index();
+			//redirect('./');
+			//$this->load->view('home.phtml');
 		} else {
 			$login = $this->input->post('login');
 			$senha = $this->input->post('senha');
@@ -48,9 +51,9 @@ class Home extends CI_Controller
 				$data = array('user_id' => $row->id, 'logged' => true);
 				$this->session->set_userdata($data);
 				if ($row->is_admin == 1) {
-					$this->load->view('home_admin.phtml', $data);
+					$this->load->view('home_admin.phtml');
 				} else {
-					redirect('user/user', $data);
+					redirect('user/user');
 				}
 			} else {
 				$data['error'] = 'Login ou Senha Inválidos';
@@ -58,5 +61,20 @@ class Home extends CI_Controller
 			}
 		}
 	}
+	private function montaTabela()
+    {
+        $this->load->library('table');
+        $this->table->set_heading('Turma', 'Campus', 'Predio', 'Sala');
+        $turmas = $this->Classroom_model->getTurmas();
+        foreach ($turmas as $turma) {
+            $table_row = null;
+            $table_row[] = $turma["Turma"];
+            $table_row[] = $turma["Campus"];
+            $table_row[] = $turma["Predio"];
+            $table_row[] = $turma["Sala"];
+            $this->table->add_row($table_row);
+        }
+        return $this->table->generate();
+    }
 
 }

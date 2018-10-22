@@ -3,8 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <h1>Bem-Vindo <?php echo $this->db->get_where('user', array('id' => $user_id))->row()->first_name ?></h1>
 <br>
+<button onclick="window.location='<?php echo site_url('/user/user/logout') ?>'">Logout</button>
 <p>Esta é a página do usuário</p>
-<?php $this->load->Model('Classroom_model'); ?>
-<?php echo $table; ?>
+<?php
+if (isset($table)) {
+    echo $table;
+} ?>
 <br>
-<button onclick="window.location.href='./user/addClassroom'">Adicionar Turma</button>
+<button type="button" class="btn btn-success" 
+onclick="window.location='<?php echo site_url('/user/user/addTurma') ?>' "  >Adicionar Turma</button>

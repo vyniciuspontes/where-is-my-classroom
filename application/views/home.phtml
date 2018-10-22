@@ -1,3 +1,6 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,19 +19,20 @@
             <h1>Where Is My Classroom</h1>
         </div>
     </div>
+    <?php
+    if (isset($table)) {
+        echo $table;
+    } ?>
     <div class="row mt-5 justify-content-center">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">Login</h3>
-
-                    <?php
-                    defined('BASEPATH') or exit('No direct script access allowed');
-                    ?>
                     <?php echo validation_errors();
                     if (isset($error)) { ?>
                         <h4 style="color:red"><?php echo $error; ?> </h4>
-                    <?php } ?>
+                    <?php 
+                } ?>
                     <?php echo form_open('home/login'); ?>
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="email" name="login">
