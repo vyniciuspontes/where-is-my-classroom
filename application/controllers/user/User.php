@@ -16,7 +16,7 @@ class User extends CI_Controller
     {
         $data['user_id'] = $this->session->userdata('user_id');
         $data['table'] = $this->montaTabelaBy($data['user_id']);
-        var_dump($data['table']);
+        //var_dump($data['table']);
         $this->load->view('user/home.phtml', $data);
     }
     public function logout()
@@ -27,14 +27,17 @@ class User extends CI_Controller
 
     private function montaTabelaBy($aux)
     {
-        $this->load->library('table');
-        $this->table->set_heading('Turma', 'Campus', 'Predio', 'Sala');
-        if ((int)$aux) {
+        //echo $aux; echo '<br>';
+        if ((int) $aux) {
             $turmas = $this->Classroom_model->getTurmasById($aux);
         } else {
             $turmas = $this->Classroom_model->getTurmasByName($aux);
+            //print_r($turmas);
         }
+        //echo "teste "; var_dump(isset($turmas));
         if (!empty($turmas)) {
+            $this->load->library('table');
+            $this->table->set_heading('Turma', 'Campus', 'Predio', 'Sala');
             foreach ($turmas as $turma) {
                 $table_row = null;
                 $table_row[] = $turma["Turma"];
@@ -48,8 +51,9 @@ class User extends CI_Controller
 
                 $this->table->add_row($table_row);
             }
+            return $this->table->generate();
         }
-        return $this->table->generate();
+        return '';
     }
 
     public function addTurma()
@@ -72,7 +76,7 @@ class User extends CI_Controller
     {
         $data = array(
             'user_id' => $this->session->userdata('user_id'),
-            'classroom_id' => $id
+            'classroom_id' => $id,
         );
         $this->db->insert('student_classroom', $data);
         redirect(site_url('user/user'));
@@ -81,7 +85,7 @@ class User extends CI_Controller
     {
         $data = array(
             'user_id' => $this->session->userdata('user_id'),
-            'classroom_id' => $id
+            'classroom_id' => $id,
         );
         $this->db->delete('student_classroom', $data);
         redirect(site_url('user/user'));

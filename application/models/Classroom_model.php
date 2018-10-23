@@ -15,7 +15,7 @@ class Classroom_model extends CI_Model
                 'Turma' => $subject_name,
                 'Campus' => $row->campus,
                 'Predio' => $row->building,
-                'Sala' => $row->number
+                'Sala' => $row->number,
             );
             $i++;
         }
@@ -25,40 +25,49 @@ class Classroom_model extends CI_Model
 
     public function getTurmasById($id)
     {
-        $collection = $this->db->get_where('student_classroom', array('user_id' => $id));
+        //$collection = $this->db->get_where('student_classroom', array('user_id' => $id));
+        //var_dump($collection->result());
+        $this->db->select('*');
+        $this->db->from('classroom');
+        $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
+        $this->db->join('subject', 'subject.id = classroom.subject_id');
+        $this->db->where('student_classroom.user_id', $id);
+        $collection = $this->db->get();
         $i = 0;
-        $className[] = '';
-        if (!empty($collection)) {
+        if (!empty($collection->result())) {
+            $className[] = '';
             foreach ($collection->result() as $row) {
-                $classroom = $this->db->get_where('classroom', array('id' => $row->classroom_id))->row();
-                $subject_name = $this->db->get_where('subject', array('id' => $classroom->subject_id))->row()->name;
                 $className[$i] = array(
-                    'Id' => $classroom->id,
-                    'Turma' => $subject_name,
-                    'Campus' => $classroom->campus,
-                    'Predio' => $classroom->building,
-                    'Sala' => $classroom->number
+                    'Id' => $row->id,
+                    'Turma' => $row->name,
+                    'Campus' => $row->campus,
+                    'Predio' => $row->building,
+                    'Sala' => $row->number,
                 );
                 $i++;
             }
+            //print_r($className);
+            return $className;
         }
-        //print_r($className);
-        return $className;
+        return '';
     }
 
     public function getTurmasByName($name)
     {
+        $this->db->select('*');
+        $this->db->from('classroom');
+        $this->db->join('subject', 'subject.id = classroom.subject_id');
         $this->db->like('name', $name, 'both');
-        $name = $this->db->get('subject');
+        $name = $this->db->get();
         $i = 0;
         foreach ($name->result() as $row) {
-            $classroom = $this->db->get_where('classroom', array('subject_id' => $row->id))->row();
+            //$classroom = $this->db->get_where('classroom', array('subject_id' => $row->id))->row();
             $className[$i] = array(
-                'Id' => $classroom->id,
+                'Id' => $row->id,
                 'Turma' => $row->name,
-                'Campus' => $classroom->campus,
-                'Predio' => $classroom->building,
-                'Sala' => $classroom->number
+                'Campus' => $row->campus,
+                'Predio' => $row->building,
+                'Sala' => $row->number,
             );
             $i++;
         }
@@ -68,4 +77,3 @@ class Classroom_model extends CI_Model
     }
 
 }
-?>
