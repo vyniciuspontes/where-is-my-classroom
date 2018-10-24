@@ -32,9 +32,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
   				<ul class="navbar-nav ml-auto">
   					<!--<li class="nav-item"><span class="navbar-text">Vynicius</span></li>-->
   					<li class="nav-item pl-3">
-  						<form method="post">
-  							<input type="submit" class="form-control link-button"
-  								value="Login" />
+            <?php echo form_open('home/login'); ?>
+            <?php echo form_submit('', 'Login', "class='form-control link-button'"); ?>
+            <?php echo form_close(); ?>
   						</form>
   					</li>
   				</ul>

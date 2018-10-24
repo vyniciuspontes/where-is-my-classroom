@@ -30,8 +30,11 @@ class Home extends CI_Controller
 		$data['table'] = $this->montaTabela();
 		$this->load->view('home.phtml', $data);
 	}
+	public function login(){
+		$this->load->view('login.phtml');
+	}
 
-	public function login()
+	public function loginValidate()
 	{
 		$this->load->library('form_validation');
 		$validLogin = false;
