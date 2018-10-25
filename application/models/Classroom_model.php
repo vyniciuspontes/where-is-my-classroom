@@ -5,7 +5,7 @@ class Classroom_model extends CI_Model
     {
         parent::__construct();
     }
-    public function getTurmas()
+    public function joinQuery($param)
     {
         $this->db->select('*, subject.name as sname, teacher.name as tname, week_day.name as wname');
         $this->db->from('classroom');
@@ -14,7 +14,23 @@ class Classroom_model extends CI_Model
         $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
-        $collection = $this->db->get();
+        if (!$param) {
+            return $this->db->get();
+        } else if ((int)$param) {
+            $this->db->where('student_classroom.user_id', $param);
+        } else {
+            $this->db->like('subject.name', $param, 'both');
+            $this->db->or_like('teacher.name', $param, 'both');
+
+            //$this->db->like('teacher.name', $param, 'both');
+            //print_r($turmas);
+        }
+        return $this->db->get();
+
+    }
+    public function getTurmas()
+    {
+        $collection = $this->joinQuery(0);
         //echo $this->db->last_query();
         //var_dump($collection->result());
         $i = 0;
@@ -39,19 +55,17 @@ class Classroom_model extends CI_Model
     {
         //$collection = $this->db->get_where('student_classroom', array('user_id' => $id));
         //var_dump($collection->result());
-        $this->db->select('*');
-        $this->db->from('classroom');
-        $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
-        $this->db->join('subject', 'subject.id = classroom.subject_id');
-        $this->db->where('student_classroom.user_id', $id);
-        $collection = $this->db->get();
+        $collection = $this->joinQuery($id);
         $i = 0;
         if (!empty($collection->result())) {
             $className[] = '';
             foreach ($collection->result() as $row) {
                 $className[$i] = array(
-                    'id' => $row->id,
-                    'turma' => $row->name,
+                    'turma' => $row->sname,
+                    'professor' => $row->tname,
+                    'horario_ini' => $row->start_time,
+                    'horario_fim' => $row->end_time,
+                    'dia' => $row->wname,
                     'campus' => $row->campus,
                     'predio' => $row->building,
                     'sala' => $row->number,
@@ -66,17 +80,18 @@ class Classroom_model extends CI_Model
 
     public function getTurmasByName($name)
     {
-        $this->db->select('*');
-        $this->db->from('classroom');
-        $this->db->join('subject', 'subject.id = classroom.subject_id');
-        $this->db->like('name', $name, 'both');
-        $name = $this->db->get();
+        $name = $this->joinQuery($name);
         $i = 0;
+        //var_dump($name->result());
+        $className[] = '';
         foreach ($name->result() as $row) {
             //$classroom = $this->db->get_where('classroom', array('subject_id' => $row->id))->row();
             $className[$i] = array(
-                'id' => $row->id,
-                'turma' => $row->name,
+                'turma' => $row->sname,
+                'professor' => $row->tname,
+                'horario_ini' => $row->start_time,
+                'horario_fim' => $row->end_time,
+                'dia' => $row->wname,
                 'campus' => $row->campus,
                 'predio' => $row->building,
                 'sala' => $row->number,
