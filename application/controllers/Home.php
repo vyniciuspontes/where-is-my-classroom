@@ -79,6 +79,13 @@ class Home extends CI_Controller
             $this->table->add_row($table_row);
         }
         return $this->table->generate();
+	}
+	public function searchTurma()
+    {
+        $name = $this->input->post('search');
+        $table = $this->Classroom_model->getTurmasByName($name);
+        $data = array('table' => $table);
+        $this->load->view('home.phtml', $data);
     }
 
 }
