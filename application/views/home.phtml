@@ -21,6 +21,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <?php //var_dump($table) ?>
 
   			<div class="collapse navbar-collapse" id="navbarNav">
   				<ul class="navbar-nav mr-auto">
@@ -55,18 +56,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     </div>
   </div>
-
   <div class="row mt-4 justify-content-center">
+  <?php foreach($table as $row) : ?>
+  <?php //var_dump($row) ?>
     <div class="col-md-12">
       <div class="card-deck">
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title">Engenharia De Software I</h3>
-            <h6 class="card-subtitle mb-4 text-muted">Leonardo Murta</h6>
-            <p class="card-text">18:00 - 20:00</p>
-            <p class="card-text">Segunda, Quarta</p>
-            <p class="card-text">Campus da Praia Vermelha - Prédio do IC</p>
-            <p class="card-text">Sala 404</p>
+            <h3 class="card-title"><?php echo $row["turma"] ?></h3>
+            <h6 class="card-subtitle mb-4 text-muted"><?php echo $row["professor"] ?></h6>
+            <p class="card-text"><?php echo $row["horario_ini"] . ' - ' . $row["horario_fim"] ?></p>
+            <p class="card-text"><?php echo $row["dia"] ?></p>
+            <p class="card-text"><?php echo $row["campus"] . ' - ' . $row["predio"] ?></p>
+            <p class="card-text"><?php echo $row["sala"] ?></p>
             <a href="#" class="card-link">Google Maps</a>
 
             <div class="custom-control custom-checkbox float-right">
@@ -76,7 +78,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
           </div>
         </div>
-        <div class="card">
+        <!-- <div class="card">
           <div class="card-body">
             <h3 class="card-title">Engenharia De Software I</h3>
             <h6 class="card-subtitle mb-4 text-muted">Leonardo Murta</h6>
@@ -89,12 +91,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="custom-control custom-checkbox float-right">
               <input type="checkbox" class="custom-control-input" id="customCheck2">
               <label class="custom-control-label" for="customCheck2">Inscrito</label>
-            </div>
+            </div> -->
 
           </div>
         </div>
       </div>
     </div>
+<?php endforeach; ?>
   </div>
 </div>
 

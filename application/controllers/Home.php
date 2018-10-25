@@ -27,7 +27,8 @@ class Home extends CI_Controller
 	}
 	public function index()
 	{
-		$data['table'] = $this->montaTabela();
+		//$data['table'] = $this->montaTabela();
+		$data['table'] = $this->Classroom_model->getTurmas();
 		$this->load->view('home.phtml', $data);
 	}
 	public function login(){
