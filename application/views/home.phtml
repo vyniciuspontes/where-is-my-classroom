@@ -66,9 +66,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
   </div>
   <div class="row mt-4 justify-content-center">
 
-  <?php //var_dump($table) ?>
+  <?php var_dump($table) ?>
     <div class="col-md-12">
       <div class="card-columns">
+        <?php if(!empty($table)): ?>
         <?php foreach($table as $row) : ?>
           <div class="card">
             <div class="card-body">
@@ -89,6 +90,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           </div>
 
       <?php endforeach; ?>
+      <?php endif; ?>
         <!-- <div class="card">
           <div class="card-body">
             <h3 class="card-title">Engenharia De Software I</h3>

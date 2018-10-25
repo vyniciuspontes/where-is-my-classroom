@@ -17,19 +17,19 @@ class Classroom_model extends CI_Model
         classroom_week_day.start_time,
         classroom_week_day.end_time,
         maps_info,
-        ');
+        ', false);
         $this->db->from('classroom');
-        $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
+        //$this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
         $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
-        $this->db->group_by(array("teacher.id", "subject.id", "classroom.id", "classroom_week_day.id"));// "number", "campus", "building", "classroom_week_day.start_time",
+        $this->db->group_by(array("teacher.id", "subject.id"));// "number", "campus", "building", "classroom_week_day.start_time",
         //"classroom_week_day.end_time", "maps_info"));
         if (!$param) {
             $query = $this->db->get();
-            echo $this->db->last_query() . '<br>';
-            print_r($query->result());
+            // echo $this->db->last_query() . '<br>';
+            // print_r($query->result());
             return $query;
         } else if ((int)$param) {
             $this->db->where('student_classroom.user_id', $param);
@@ -96,9 +96,9 @@ class Classroom_model extends CI_Model
     public function getTurmasByName($name)
     {
         $name = $this->joinQuery($name);
-        echo $name->db->last_query();
+        
         $i = 0;
-        var_dump($name->result());
+        //var_dump($name->result());
         $className[] = '';
         foreach ($name->result() as $row) {
             //$classroom = $this->db->get_where('classroom', array('subject_id' => $row->id))->row();
@@ -107,7 +107,7 @@ class Classroom_model extends CI_Model
                 'professor' => $row->tname,
                 'horario_ini' => $row->start_time,
                 'horario_fim' => $row->end_time,
-                'dia' => $row->wname,
+                'dia' => $row->wdays,
                 'campus' => $row->campus,
                 'predio' => $row->building,
                 'sala' => $row->number,
