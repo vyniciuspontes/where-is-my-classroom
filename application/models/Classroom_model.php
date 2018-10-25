@@ -7,22 +7,30 @@ class Classroom_model extends CI_Model
     }
     public function joinQuery($param)
     {
-        $this->db->select('*, 
-        subject.name as sname, 
+        $this->db->select('
         teacher.name as tname, 
-        week_day.name as wname
-        group_concat(distinct week_day.name order by week_day.id separator "&nbsp;&nbsp;>&nbsp;&nbsp;" ) as wdays');
-        
-        //group_concat(distinct wd.name order by wd.id separator ) as week_days,
+        subject.name as sname, 
+        classroom.number as number,
+        classroom.campus as campus,
+        classroom.building as building,
+        GROUP_CONCAT(distinct week_day.name order by week_day.id ASC SEPARATOR "," ) as wdays,
+        classroom_week_day.start_time,
+        classroom_week_day.end_time,
+        maps_info,
+        ');
         $this->db->from('classroom');
         $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
         $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
-        $this->db->group_by("teacher.id", "subject.id");
+        $this->db->group_by(array("teacher.id", "subject.id", "classroom.id", "classroom_week_day.id"));// "number", "campus", "building", "classroom_week_day.start_time",
+        //"classroom_week_day.end_time", "maps_info"));
         if (!$param) {
-            return $this->db->get();
+            $query = $this->db->get();
+            echo $this->db->last_query() . '<br>';
+            print_r($query->result());
+            return $query;
         } else if ((int)$param) {
             $this->db->where('student_classroom.user_id', $param);
         } else {
@@ -47,7 +55,7 @@ class Classroom_model extends CI_Model
                 'professor' => $row->tname,
                 'horario_ini' => $row->start_time,
                 'horario_fim' => $row->end_time,
-                'dia' => $row->wname,
+                'dia' => $row->wdays,
                 'campus' => $row->campus,
                 'predio' => $row->building,
                 'sala' => $row->number,
