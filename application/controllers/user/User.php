@@ -15,7 +15,7 @@ class User extends CI_Controller
     public function index()
     {
         $data['user_id'] = $this->session->userdata('user_id');
-        $data['table'] = $this->montaTabelaBy($data['user_id']);
+        $data['table'] = $this->Classroom_model->getTurmasById($data['user_id']);
         //var_dump($data['table']);
         $this->load->view('user/home.phtml', $data);
     }

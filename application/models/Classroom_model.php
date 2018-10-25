@@ -7,13 +7,20 @@ class Classroom_model extends CI_Model
     }
     public function joinQuery($param)
     {
-        $this->db->select('*, subject.name as sname, teacher.name as tname, week_day.name as wname');
+        $this->db->select('*, 
+        subject.name as sname, 
+        teacher.name as tname, 
+        week_day.name as wname
+        group_concat(distinct week_day.name order by week_day.id separator "&nbsp;&nbsp;>&nbsp;&nbsp;" ) as wdays');
+        
+        //group_concat(distinct wd.name order by wd.id separator ) as week_days,
         $this->db->from('classroom');
         $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
         $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
+        $this->db->group_by("teacher.id", "subject.id");
         if (!$param) {
             return $this->db->get();
         } else if ((int)$param) {
@@ -81,8 +88,9 @@ class Classroom_model extends CI_Model
     public function getTurmasByName($name)
     {
         $name = $this->joinQuery($name);
+        echo $name->db->last_query();
         $i = 0;
-        //var_dump($name->result());
+        var_dump($name->result());
         $className[] = '';
         foreach ($name->result() as $row) {
             //$classroom = $this->db->get_where('classroom', array('subject_id' => $row->id))->row();
