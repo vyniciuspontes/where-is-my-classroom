@@ -6,9 +6,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <button onclick="window.location='<?php echo site_url('/user/user/logout') ?>'">Logout</button>
 <p>Esta é a página do usuário</p>
 <?php
-if (isset($table)) {
-     echo $table;
-} ?>
+
+ echo var_dump($table);
+?>
 <br>
-<button type="button" class="btn btn-success" 
+<button type="button" class="btn btn-success"
 onclick="window.location='<?php echo site_url('/user/user/addTurma') ?>' "  >Adicionar Turma</button>

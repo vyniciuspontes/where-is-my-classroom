@@ -15,8 +15,7 @@ class User extends CI_Controller
     public function index()
     {
         $data['user_id'] = $this->session->userdata('user_id');
-        $data['table'] = $this->Classroom_model->getTurmasById($data['user_id']);
-        //var_dump($data['table']);
+        $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id']);
         $this->load->view('user/home.phtml', $data);
     }
     public function logout()
@@ -29,7 +28,7 @@ class User extends CI_Controller
     {
         //echo $aux; echo '<br>';
         if ((int) $aux) {
-            $turmas = $this->Classroom_model->getTurmasById($aux);
+            $turmas = $this->Classroom_model->getTurmasByUserId($aux);
         } else {
             $turmas = $this->Classroom_model->getTurmasByName($aux);
             //print_r($turmas);
