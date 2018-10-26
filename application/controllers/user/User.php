@@ -59,13 +59,13 @@ class User extends CI_Controller
     {
         $data['user_id'] = $this->session->userdata('user_id');
         $data['table'] = $this->session->userdata('table');
-        $this->load->view('user/add.phtml', $data);
+        $this->load->view('user/home.phtml', $data);
     }
 
     public function searchTurma()
     {
-        $name = $this->input->post('classroomname');
-        $table = $this->montaTabelaBy($name);
+        $name = $this->input->post('search');
+        $table = $this->Classroom_model->getTurmasByName($name);
         $data = array('table' => $table);
         $this->session->set_userdata($data);
         $this->addTurma();

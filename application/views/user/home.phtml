@@ -19,7 +19,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <nav class="navbar navbar-expand-lg navbar-light bg-light"
 		th:fragment="dashboard-navbar(brand, role, activePage)">
 		<div class="container">
-      <a class="navbar-brand" href="#">Where is my classroom</a>
+      <a class="navbar-brand" href="<?php echo base_url() ?>">Where is my classroom</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -27,7 +27,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   			<div class="collapse navbar-collapse" id="navbarNav">
   				<ul class="navbar-nav mr-auto">
   					<li>
-  						<a href="#" class="nav-link">Minhas Turmas</a>
+  						<a href="<?php echo site_url('user/User') ?>" class="nav-link">Minhas Turmas</a>
   					</li>
   				</ul>
 
@@ -72,7 +72,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           </div>
         </div>
         <div class="col-md-4">
-          <?php echo form_open('Home/searchTurma'); ?>
+          <?php echo form_open('user/User/searchTurma'); ?>
             <input class="form-control" name="search">
         </div>
         <div class="col-md-1">
@@ -102,6 +102,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           </div>
 
       <?php endforeach; ?>
+      <?php //$table[] = '' ?>
       <?php endif; ?>
 
           </div>

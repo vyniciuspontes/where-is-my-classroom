@@ -24,8 +24,7 @@ class Classroom_model extends CI_Model
         $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
-        $this->db->group_by(array("teacher.id", "subject.id"));// "number", "campus", "building", "classroom_week_day.start_time",
-        //"classroom_week_day.end_time", "maps_info"));
+        $this->db->group_by(array("teacher.id", "subject.id"));
         if (!$param) {
             $query = $this->db->get();
             // echo $this->db->last_query() . '<br>';
@@ -67,8 +66,8 @@ class Classroom_model extends CI_Model
       $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
       $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
       $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
-      $this->db->group_by(array("teacher.id", "subject.id"));
       $this->db->where('student_classroom.user_id', $userId);
+      $this->db->group_by(array("teacher.id", "subject.id"));
 
       return $this->db->get();
     }
