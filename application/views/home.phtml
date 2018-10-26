@@ -67,10 +67,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <div class="row mt-4 justify-content-center">
 
   <?php //var_dump($table) ?>
+  <!--<?php var_dump($table) ?>-->
     <div class="col-md-12">
       <div class="card-columns">
         <?php if(!empty($table)): ?>
-        <?php foreach($table as $row) : ?>
+        <?php foreach($table as $key=>$row) : ?>
           <div class="card">
             <div class="card-body">
               <h3 class="card-title"><?php echo $row["turma"] ?></h3>
@@ -80,33 +81,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
               <p class="card-text"><?php echo $row["campus"] . ' - ' . $row["predio"] ?></p>
               <p class="card-text"><?php echo $row["sala"] ?></p>
               <a href="#" class="card-link">Google Maps</a>
-
               <div class="custom-control custom-checkbox float-right">
-                <input type="checkbox" class="custom-control-input" id="customCheck1">
-                <label class="custom-control-label" for="customCheck1">Inscrito</label>
+                <input type="checkbox" class="custom-control-input" id="customCheck<?php echo $key ?>">
+                <label class="custom-control-label" for="customCheck<?php echo $key ?>">Inscrito</label>
               </div>
 
             </div>
           </div>
 
       <?php endforeach; ?>
-      <?php endif; ?>
-        <!-- <div class="card">
-          <div class="card-body">
-            <h3 class="card-title">Engenharia De Software I</h3>
-            <h6 class="card-subtitle mb-4 text-muted">Leonardo Murta</h6>
-            <p class="card-text">18:00 - 20:00</p>
-            <p class="card-text">Segunda, Quarta</p>
-            <p class="card-text">Campus da Praia Vermelha - Prédio do IC</p>
-            <p class="card-text">Sala 404</p>
-            <a href="#" class="card-link">Google Maps</a>
-
-            <div class="custom-control custom-checkbox float-right">
-              <input type="checkbox" class="custom-control-input" id="customCheck2">
-              <label class="custom-control-label" for="customCheck2">Inscrito</label>
-            </div> -->
-
-          </div>
+      <?php endif; ?>          </div>
         </div>
       </div>
     </div>
