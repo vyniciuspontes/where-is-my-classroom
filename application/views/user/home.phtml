@@ -1,14 +1,119 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<h1>Bem-Vindo <?php echo $this->db->get_where('user', array('id' => $user_id))->row()->first_name ?></h1>
-<br>
-<button onclick="window.location='<?php echo site_url('/user/user/logout') ?>'">Logout</button>
-<p>Esta é a página do usuário</p>
-<?php
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/home.css') ?>">
 
- echo var_dump($table);
-?>
-<br>
-<button type="button" class="btn btn-success"
-onclick="window.location='<?php echo site_url('/user/user/addTurma') ?>' "  >Adicionar Turma</button>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light"
+		th:fragment="dashboard-navbar(brand, role, activePage)">
+		<div class="container">
+      <a class="navbar-brand" href="#">Where is my classroom</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  			<div class="collapse navbar-collapse" id="navbarNav">
+  				<ul class="navbar-nav mr-auto">
+  					<li>
+  						<a href="#" class="nav-link">Minhas Turmas</a>
+  					</li>
+  				</ul>
+
+  				<ul class="navbar-nav ml-auto">
+  					<li class="nav-item"><span class="navbar-text"><?php echo $this->db->get_where('user', array('id' => $user_id))->row()->first_name ?></span></li>
+  					<li class="nav-item pl-3">
+            <button class='form-control link-button' onclick="window.location='<?php echo site_url('/user/user/logout') ?>'">Logout</button>
+  					</li>
+  				</ul>
+  			</div>
+  		</div>
+  </nav>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-row">
+        <div class="col-md-6">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+            <label class="form-check-label" for="inlineRadio1">Segunda</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+            <label class="form-check-label" for="inlineRadio2">Terça</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+            <label class="form-check-label" for="inlineRadio3">Quarta</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4">
+            <label class="form-check-label" for="inlineRadio4">Quinta</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5">
+            <label class="form-check-label" for="inlineRadio5">Sexta</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio6" value="option6">
+            <label class="form-check-label" for="inlineRadio6">Sábado</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <?php echo form_open('Home/searchTurma'); ?>
+            <input class="form-control" name="search">
+        </div>
+        <div class="col-md-1">
+          <?php echo form_submit('', 'Procurar', "class='btn btn-primary'"); ?>
+          <?php echo form_close(); ?>
+          <!-- <button class="btn btn-primary">Procurar</button> -->
+        </div>
+    </div>
+    </div>
+  </div>
+  <div class="row mt-4 justify-content-center">
+
+    <div class="col-md-12">
+      <div class="card-columns">
+        <?php if(!empty($table)): ?>
+        <?php foreach($table as $row) : ?>
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title"><?php echo $row["turma"] ?></h3>
+              <h6 class="card-subtitle mb-4 text-muted"><?php echo $row["professor"] ?></h6>
+              <p class="card-text"><?php echo $row["horario_ini"] . ' - ' . $row["horario_fim"] ?></p>
+              <p class="card-text"><?php echo $row["dia"] ?></p>
+              <p class="card-text"><?php echo $row["campus"] . ' - ' . $row["predio"] ?></p>
+              <p class="card-text"><?php echo $row["sala"] ?></p>
+              <a href="#" class="card-link">Google Maps</a>
+            </div>
+          </div>
+
+      <?php endforeach; ?>
+      <?php endif; ?>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/javascript" src="<?php echo base_url('assets/js/jquery-3.3.1.min.js') ?>"></script>
+<script type="application/javascript" src="<?php echo base_url('assets/js/popper.min.js') ?>"></script>
+<script type="application/javascript" src="<?php echo base_url('assets/js/bootstrap.js') ?>"></script>
+
+</body>
+</html>
