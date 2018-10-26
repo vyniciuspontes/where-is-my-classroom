@@ -96,7 +96,7 @@ class Classroom_model extends CI_Model
     {
         //$collection = $this->db->get_where('student_classroom', array('user_id' => $id));
         //var_dump($collection->result());
-        $collection = $this->getUserClassroomsDetails($id);
+        $collection = $this->getDetalhesTurmasUsuario($id);
         $i = 0;
         if (!empty($collection->result())) {
             $className[] = '';
