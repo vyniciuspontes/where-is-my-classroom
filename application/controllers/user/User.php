@@ -15,7 +15,7 @@ class User extends CI_Controller
     public function index()
     {
         $data['user_id'] = $this->session->userdata('user_id');
-        $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id']);
+        $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
         $this->load->view('user/home.phtml', $data);
     }
     public function logout()
@@ -64,8 +64,9 @@ class User extends CI_Controller
 
     public function searchTurma()
     {
+        $data['user_id'] = $this->session->userdata('user_id');
         $name = $this->input->post('search');
-        $table = $this->Classroom_model->getTurmasByName($name);
+        $table = $this->Classroom_model->getTurmasByUserId($data['user_id'], $name);
         $data = array('table' => $table);
         $this->session->set_userdata($data);
         $this->addTurma();

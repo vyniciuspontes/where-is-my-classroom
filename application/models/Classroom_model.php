@@ -36,6 +36,7 @@ class Classroom_model extends CI_Model
             $this->db->like('subject.name', $param, 'both');
             $this->db->or_like('teacher.name', $param, 'both');
 
+
             //$this->db->like('teacher.name', $param, 'both');
             //print_r($turmas);
         }
@@ -57,7 +58,7 @@ class Classroom_model extends CI_Model
         ', false);
     }
 
-    public function getDetalhesTurmasUsuario($userId) {
+    public function getDetalhesTurmasUsuario($userId, $queryString) {
 
       $this->db = $this->getTurmasDetails();
       $this->db->from('classroom');
@@ -67,6 +68,12 @@ class Classroom_model extends CI_Model
       $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
       $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
       $this->db->where('student_classroom.user_id', $userId);
+
+      if($queryString) {
+          $this->db->like('subject.name', $queryString, 'both');
+          $this->db->or_like('teacher.name', $queryString, 'both');
+      }
+
       $this->db->group_by(array("teacher.id", "subject.id"));
 
       return $this->db->get();
@@ -95,11 +102,11 @@ class Classroom_model extends CI_Model
         return $className;
     }
 
-    public function getTurmasByUserId($id)
+    public function getTurmasByUserId($id, $queryString)
     {
         //$collection = $this->db->get_where('student_classroom', array('user_id' => $id));
         //var_dump($collection->result());
-        $collection = $this->getDetalhesTurmasUsuario($id);
+        $collection = $this->getDetalhesTurmasUsuario($id, $queryString);
         $i = 0;
         if (!empty($collection->result())) {
             $className[] = '';
