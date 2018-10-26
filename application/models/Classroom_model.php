@@ -44,8 +44,8 @@ class Classroom_model extends CI_Model
 
     }
 
-    public function getDetalhesTurmasUsuario($userId) {
-      $this->db->select('
+    private function getTurmasDetails(){
+      return $this->db->select('
         teacher.name as tname,
         subject.name as sname,
         classroom.number as number,
@@ -56,7 +56,11 @@ class Classroom_model extends CI_Model
         classroom_week_day.end_time,
         maps_info,
         ', false);
+    }
 
+    public function getDetalhesTurmasUsuario($userId) {
+
+      $this->db = $this->getTurmasDetails();
       $this->db->from('classroom');
       $this->db->join('subject', 'subject.id = classroom.subject_id');
       $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
