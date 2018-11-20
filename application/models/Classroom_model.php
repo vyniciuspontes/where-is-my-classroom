@@ -8,6 +8,7 @@ class Classroom_model extends CI_Model
     public function joinQuery($param)
     {
         $this->db->select('
+        classroom.id as cid,
         teacher.name as tname,
         subject.name as sname,
         classroom.number as number,
@@ -46,6 +47,7 @@ class Classroom_model extends CI_Model
 
     private function getTurmasDetails(){
       return $this->db->select('
+        classroom.id as cid,
         teacher.name as tname,
         subject.name as sname,
         classroom.number as number,
@@ -87,6 +89,7 @@ class Classroom_model extends CI_Model
         $i = 0;
         foreach ($collection->result() as $row) {
             $className[$i] = array(
+                'id' => $row->cid,
                 'turma' => $row->sname,
                 'professor' => $row->tname,
                 'horario_ini' => $row->start_time,
@@ -112,6 +115,7 @@ class Classroom_model extends CI_Model
             $className[] = '';
             foreach ($collection->result() as $row) {
               $className[$i] = array(
+                  'id' => $row->cid,
                   'turma' => $row->sname,
                   'professor' => $row->tname,
                   'horario_ini' => $row->start_time,

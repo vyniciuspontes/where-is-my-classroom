@@ -36,13 +36,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
   				</ul>
 
   				<ul class="navbar-nav ml-auto">
-  					<!--<li class="nav-item"><span class="navbar-text">Vynicius</span></li>-->
-  					<li class="nav-item pl-3">
-            <?php echo form_open('home/login'); ?>
-            <?php echo form_submit('', 'Login', "class='form-control link-button'"); ?>
-            <?php echo form_close(); ?>
-  						</form>
-  					</li>
+            <!--<li class="nav-item"><span class="navbar-text">Vynicius</span></li>-->
+            <?php if (!$this->session->userdata('logged')) : ?>
+                <li class="nav-item pl-3">
+                <?php echo form_open('home/login'); ?>
+                <?php echo form_submit('', 'Login', "class='form-control link-button'"); ?>
+                <?php echo form_close(); ?>
+                </li>
+            <?php else : ?>
+                <li class="nav-item"><span class="navbar-text"><?php echo $this->db->get_where('user', array('id' => $user_id))->row()->first_name ?></span></li>
+                <li class="nav-item pl-3">
+                <button class='form-control link-button' onclick="window.location='<?php echo site_url('/user/user/logout') ?>'">Logout</button>
+            <?php endif; ?>
   				</ul>
   			</div>
   		</div>
@@ -66,12 +71,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
   </div>
   <div class="row mt-4 justify-content-center">
 
-  <?php //var_dump($table) ?>
-  <!--<?php var_dump($table) ?>-->
     <div class="col-md-12">
       <div class="card-columns">
-        <?php if(!empty($table)): ?>
-        <?php foreach($table as $key=>$row) : ?>
+        <?php if (!empty($table)) : ?>
+        <?php foreach ($table as $key => $row) : ?>
           <div class="card">
             <div class="card-body">
               <h3 class="card-title"><?php echo $row["turma"] ?></h3>
@@ -85,7 +88,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <input type="checkbox" class="custom-control-input" id="customCheck<?php echo $key ?>">
                 <label class="custom-control-label" for="customCheck<?php echo $key ?>">Inscrito</label>
               </div>
-
+              <script>
+                var checkbox = document.getElementById("customCheck<?php echo $key ?>");
+                checkbox.addEventListener("change", function(){
+                    //chama funcao para inserir/remover turma da tabela
+                    console.log(checkbox);
+                    if (checkbox.checked == true){
+                      console.log('esta marcado');
+                    } else{ console.log('nao esta marcado');}
+                  });
+              </script>
+              <?php if (!empty($table_user)) : ?>
+                <?php foreach ($table_user as $tu) : ?>
+                    <?php if ($tu["id"] == $row["id"]) : ?>
+                      <script> checkbox.checked = true;</script>
+                    <?php endif;?>
+                <?php endforeach;?> 
+              <?php endif;?>
             </div>
           </div>
 

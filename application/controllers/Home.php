@@ -27,6 +27,10 @@ class Home extends CI_Controller
 	}
 	public function index()
 	{
+		if ($this->session->userdata('logged')){
+			$data['user_id'] = $this->session->userdata('user_id');
+			$data['table_user'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
+		}
 		//$data['table'] = $this->montaTabela();
 		$data['table'] = $this->Classroom_model->getTurmas();
 		$this->load->view('home.phtml', $data);
@@ -55,7 +59,7 @@ class Home extends CI_Controller
 				$data = array('user_id' => $row->id, 'logged' => true);
 				$this->session->set_userdata($data);
 				if ($row->is_admin == 1) {
-					$this->load->view('home_admin.phtml');
+					redirect('admin/admin');
 				} else {
 					redirect('user/user');
 				}
