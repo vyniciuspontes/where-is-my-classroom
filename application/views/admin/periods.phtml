@@ -1,0 +1,95 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Login</title>
+	<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css') ?>">
+	<link rel="stylesheet" href="<?php echo base_url('assets/css/home.css') ?>">
+</head>
+
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="dashboard-navbar(brand, role, activePage)">
+		<div class="container">
+			<a class="navbar-brand" href="<?php echo base_url() ?>">Where is my classroom</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a href="<?php echo site_url('admin/admin') ?>" class="nav-link">Turmas</a>
+					</li>
+					<li class="nav-item">
+						<a href="<?php echo site_url('admin/admin/subjects') ?>" class="nav-link">Matérias</a>
+					</li>
+					<li class="nav-item">
+						<a href="<?php echo site_url('admin/admin/teachers') ?>" class="nav-link">Professores</a>
+					</li>
+					<li class="nav-item active">
+						<a href="<?php echo site_url('admin/admin/periods') ?>" class="nav-link">Períodos</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item"><span class="navbar-text">
+							<?php echo $this->db->get_where('user', array('id' => $user_id))->row()->first_name ?></span></li>
+					<li class="nav-item pl-3">
+						<button class='form-control link-button' onclick="window.location='<?php echo site_url('/admin/admin/logout') ?>'">Logout</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-row justify-content-center">
+					<div class="col-md-10">
+						<!--TODO:fazer isso funcionar-->
+						<?php echo form_open('Home/searchTurma'); ?>
+						<input class="form-control" name="search">
+					</div>
+					<div class="col-md-1">
+						<?php echo form_submit('', 'Procurar', "class='btn btn-primary'"); ?>
+						<?php echo form_close(); ?>
+						<!-- <button class="btn btn-primary">Procurar</button> -->
+					</div>
+					<div class="col-md-1">
+						<button type="button" class="btn btn-success">Criar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mt-4 justify-content-center">
+
+			<div class="col-md-12">
+				<div class="list-group">
+          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-inline-flex justify-content-between">
+              <h5 class="mb-1">2018/1</h5>
+            </div>
+          </a>
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-inline-flex justify-content-between">
+              <h5 class="mb-1">2018/2</h5>
+            </div>
+          </a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="application/javascript" src="<?php echo base_url('assets/js/jquery-3.3.1.min.js') ?>"></script>
+	<script type="application/javascript" src="<?php echo base_url('assets/js/popper.min.js') ?>"></script>
+	<script type="application/javascript" src="<?php echo base_url('assets/js/bootstrap.js') ?>"></script>
+
+</body>
+
+</html>

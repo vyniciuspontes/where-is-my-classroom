@@ -19,6 +19,23 @@ class Admin extends CI_Controller
 
         $this->load->view('admin/home.phtml', $data);
     }
+
+    public function teachers(){
+      $data['user_id'] = $this->session->userdata('user_id');
+      $this->load->view('admin/teachers.phtml', $data);
+    }
+
+    public function subjects(){
+      $data['user_id'] = $this->session->userdata('user_id');
+      $this->load->view('admin/subjects.phtml', $data);
+    }
+
+    public function periods(){
+      $data['user_id'] = $this->session->userdata('user_id');
+      $this->load->view('admin/periods.phtml', $data);
+    }
+
+
     public function logout()
     {
         $this->session->sess_destroy();
