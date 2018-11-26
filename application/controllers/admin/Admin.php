@@ -35,6 +35,11 @@ class Admin extends CI_Controller
       $this->load->view('admin/periods.phtml', $data);
     }
 
+    public function classroom(){
+      $data['user_id'] = $this->session->userdata('user_id');
+      $this->load->view('admin/classroom_create_edit.phtml', $data);
+    }
+
 
     public function logout()
     {
