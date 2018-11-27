@@ -86,9 +86,12 @@ class Home extends CI_Controller
 	}
 	public function searchTurma()
     {
+		if ($this->session->userdata('logged')){
+			$data['user_id'] = $this->session->userdata('user_id');
+			$data['table_user'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
+		}
         $name = $this->input->post('search');
-        $table = $this->Classroom_model->getTurmasByName($name);
-        $data = array('table' => $table);
+        $data['table'] = $this->Classroom_model->getTurmasByName($name);
         $this->load->view('home.phtml', $data);
     }
 

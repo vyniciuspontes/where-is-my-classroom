@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+//defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <!doctype html>
 <html lang="en">
@@ -53,7 +53,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			<div class="col-md-12">
 				<div class="registration-form card">
 					<div class="card-body">
-						<h3 class="card-title">Criar Turma</h3>
+						<h3 class="card-title">
+						<?php if (!strcmp($action, 'editar')) : ?>
+						Editar Turma
+						<?php else : ?>
+						Criar Turma
+						<?php endif; ?>
+						</h3>
 						<div class="card-text">
 
 							<form autocomplete="off" action="#" th:action="@{/registration-company}" th:object="${company}" method="post" class="form" role="form">
