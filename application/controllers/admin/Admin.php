@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+//defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin extends CI_Controller
 {
@@ -25,30 +25,58 @@ class Admin extends CI_Controller
     public function teachers()
     {
         $data['user_id'] = $this->session->userdata('user_id');
+        $data['table'] = $this->Classroom_model->getTeacherByName('');
+        $this->load->view('admin/teachers.phtml', $data);
+    }
+    public function searchTeachers()
+    {
+        $data['user_id'] = $this->session->userdata('user_id');
+        $name = $this->input->post('search');
+        $data['table'] = $this->Classroom_model->getTeacherByName($name);
         $this->load->view('admin/teachers.phtml', $data);
     }
 
     public function subjects()
     {
         $data['user_id'] = $this->session->userdata('user_id');
+        $data['table'] = $this->Classroom_model->getSubjectByName('');
+        $this->load->view('admin/subjects.phtml', $data);
+    }
+    public function searchTurma()
+    {
+        $data['user_id'] = $this->session->userdata('user_id');
+        $name = $this->input->post('search');
+        $data['table'] = $this->Classroom_model->getSubjectByName($name);
         $this->load->view('admin/subjects.phtml', $data);
     }
 
     public function periods()
     {
         $data['user_id'] = $this->session->userdata('user_id');
+        $data['table'] = $this->Classroom_model->getPeriodByName('');
+        $this->load->view('admin/periods.phtml', $data);
+    }
+    public function searchPeriods()
+    {
+        $data['user_id'] = $this->session->userdata('user_id');
+        $name = $this->input->post('search');
+        $data['table'] = $this->Classroom_model->getPeriodByName($name);
         $this->load->view('admin/periods.phtml', $data);
     }
 
     public function classroom($id, $action)
     {
-        $data['turma'] =$this->Classroom_model->getTurmaById($id);
+        if (!strcmp($action, 'editar')) {
+            $data['turma'] = $this->Classroom_model->getTurmaById($id);
+        }
         $data['action'] = $action;
         $data['user_id'] = $this->session->userdata('user_id');
+        $data['teacherDropdown'] = $this->Classroom_model->getTeacherAsDropdown();
+        $data['subjectDropdown'] = $this->Classroom_model->getSubjectAsDropdown();
+        $data['periodDropdown'] = $this->Classroom_model->getPeriodAsDropdown();
 
         $this->load->view('admin/classroom_create_edit.phtml', $data);
     }
-
 
     public function logout()
     {
@@ -59,7 +87,7 @@ class Admin extends CI_Controller
     private function montaTabelaBy($aux)
     {
         //echo $aux; echo '<br>';
-        if ((int)$aux) {
+        if ((int) $aux) {
             $turmas = $this->Classroom_model->getTurmasByUserId($aux);
         } else {
             $turmas = $this->Classroom_model->getTurmasByName($aux);
@@ -94,16 +122,6 @@ class Admin extends CI_Controller
         $this->load->view('user/home.phtml', $data);
     }
 
-    public function searchTurma()
-    {
-        $data['user_id'] = $this->session->userdata('user_id');
-        $name = $this->input->post('search');
-        $table = $this->Classroom_model->getTurmasByUserId($data['user_id'], $name);
-        $data = array('table' => $table);
-        $this->session->set_userdata($data);
-        $this->addTurma();
-    }
-
     public function setTurma($id)
     {
         $data = array(
@@ -121,5 +139,14 @@ class Admin extends CI_Controller
         );
         $this->db->delete('student_classroom', $data);
         redirect(site_url('user/user'));
+    }
+    public function editTurma()
+    {
+        //$data = $this->input->post("teacher-select");
+        foreach ($_POST as $key => $value) {
+            $data[$key] = $this->input->post($key);
+        }
+        $this->Classroom_model->updateClassroom($data);
+        redirect('admin/admin');
     }
 }

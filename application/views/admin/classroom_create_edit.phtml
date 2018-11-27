@@ -54,39 +54,47 @@
 				<div class="registration-form card">
 					<div class="card-body">
 						<h3 class="card-title">
-						<?php if (!strcmp($action, 'editar')) : ?>
-						Editar Turma
-						<?php else : ?>
-						Criar Turma
-						<?php endif; ?>
+						<?php 
+							$class = '';
+							if(!empty($turma)){
+								$class = $turma[0];
+							}
+							$verb = '';
+							if ($action == 'editar'){
+								$verb = "Editar ";
+								$actionUrl = 'admin/admin/editTurma';
+							} else if ($action == 'criar'){
+								$verb = "Criar ";
+								$actionUrl = 'admin/admin/createTurma';
+							};
+						?>
+						<?php echo $verb ?>Turma
 						</h3>
 						<div class="card-text">
 
-							<form autocomplete="off" action="#" th:action="@{/registration-company}" th:object="${company}" method="post" class="form" role="form">
+							<!-- <form autocomplete="off" action="#" th:action="@{/registration-company}" th:object="${company}" method="post" class="form" role="form"> -->
+							<?php echo form_open($actionUrl) ?>
+
+							<input type="text" name="id" value="<?php if($action == 'editar') echo $class["id"] ?>" hidden />
 
 								<div class="form-row">
 									<div class="form-group col-md-4">
 										<label for="teacher-select">Professor</label>
-										<select class="custom-select" id="teacher-select">
-											<option selected value="1">One</option>
-											<option value="2">Two</option>
-											<option value="3">Three</option>
+										<select class="custom-select" id="teacher-select"  name="teacher_id">
+											<?php echo $teacherDropdown ?>
 										</select>
 									</div>
+									<!-- TODO implementar ajax para pegar matéria de acordo com o professor -->
 									<div class="form-group col-md-4">
 										<label for="subject-select">Matéria</label>
-										<select class="custom-select" id="subject-select">
-											<option selected value="1">One</option>
-											<option value="2">Two</option>
-											<option value="3">Three</option>
+										<select class="custom-select" id="subject-select" name="subject_id">
+											<?php echo $subjectDropdown ?>
 										</select>
 									</div>
 									<div class="form-group col-md-4">
 										<label for="period-select">Período</label>
-										<select class="custom-select" id="period-select">
-											<option selected value="1">One</option>
-											<option value="2">Two</option>
-											<option value="3">Three</option>
+										<select class="custom-select" id="period-select" name="period_id">
+											<?php echo $periodDropdown ?>
 										</select>
 									</div>
 								</div>
@@ -94,25 +102,25 @@
 								<div class="form-row">
 									<div class="form-group col-md-4">
 										<label for="name-input">Campus</label>
-										<input type="text" placeholder="Praia Vermelha" class="form-control" id="campus-input" required />
+										<input type="text" placeholder="Praia Vermelha" class="form-control" id="campus-input" name="campus" required />
 									</div>
 									<div class="form-group col-md-4">
 										<label for="name-input">Prédio</label>
-										<input type="text" placeholder="Instituto De Computação" class="form-control" id="building-input" required />
+										<input type="text" placeholder="Instituto De Computação" class="form-control" id="building-input" name="building" required />
 									</div>
 									<div class="form-group col-md-4">
 										<label for="name-input">Endereço</label>
-										<input type="text" placeholder="Rua Das Coves" class="form-control" id="address-input" required />
+										<input type="text" placeholder="Rua Das Coves" class="form-control" id="address-input" name="address" required />
 									</div>
 								</div>
 								<div class="form-row">
 									<div class="form-group col-md-4">
 										<label for="name-input">Número</label>
-										<input type="text" placeholder="1000" class="form-control" id="number-input" required />
+										<input type="text" placeholder="1000" class="form-control" id="number-input" name="number" required />
 									</div>
 									<div class="form-group col-md-4">
 										<label for="period-select">Tipo de Sala</label>
-										<select class="custom-select" id="room-type-select">
+										<select class="custom-select" id="room-type-select" name="room-type-select">
 											<option selected value="1">Sala</option>
 											<option value="2">Laboratório</option>
 										</select>
@@ -122,52 +130,97 @@
 								<div class="form-row">
 									<div class="col-md-6 form-group mt-4">
 										<div class="form-check form-check-inline ">
-											<input class="form-check-input" type="checkbox" name="weekDayOptions" id="firstWeekDay1" value="1">
+											<input class="form-check-input" type="checkbox" name="weekDayOptions1" id="firstWeekDay1" value="1">
 											<label class="form-check-label" for="firstWeekDay1">Segunda</label>
 										</div>
 										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="weekDayOptions" id="firstWeekDay2" value="2">
+											<input class="form-check-input" type="checkbox" name="weekDayOptions2" id="firstWeekDay2" value="2">
 											<label class="form-check-label" for="firstWeekDay2">Terça</label>
 										</div>
 										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="weekDayOptions" id="firstWeekDay3" value="3">
+											<input class="form-check-input" type="checkbox" name="weekDayOptions3" id="firstWeekDay3" value="3">
 											<label class="form-check-label" for="firstWeekDay3">Quarta</label>
 										</div>
 										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="weekDayOptions" id="firstWeekDay4" value="4">
+											<input class="form-check-input" type="checkbox" name="weekDayOptions4" id="firstWeekDay4" value="4">
 											<label class="form-check-label" for="firstWeekDay4">Quinta</label>
 										</div>
 										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="weekDayOptions" id="firstWeekDay5" value="5">
+											<input class="form-check-input" type="checkbox" name="weekDayOptions5" id="firstWeekDay5" value="5">
 											<label class="form-check-label" for="firstWeekDay5">Sexta</label>
 										</div>
 										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="weekDayOptions" id="firstWeekDay6" value="6">
+											<input class="form-check-input" type="checkbox" name="weekDayOptions6" id="firstWeekDay6" value="6">
 											<label class="form-check-label" for="firstWeekDay6">Sábado</label>
 										</div>
 									</div>
 									<div class="form-group col-md-2">
 										<label for="name-input">Horário de Início</label>
-										<input type="time" placeholder="18:00" class="form-control" id="start-time-input" required />
+										<input type="time" placeholder="18:00" class="form-control" id="start-time-input" name="start_time" required />
 									</div>
 									<div class="form-group col-md-2">
 										<label for="name-input">Horário de Término</label>
-										<input type="time" placeholder="20:00" class="form-control" id="end-time-input" required />
+											<input type="time" placeholder="20:00" class="form-control" id="end-time-input" name="end_time" required />
 									</div>
 								</div>
 								<hr />
 								<div class="form-row">
 									<div class="form-group col-md-12">
-										<button type="submit" class="btn btn-primary btn-block">Salvar</button>
+										<?php echo form_submit('', 'Salvar', "class='btn btn-primary btn-block'") ?>
+										<!-- <button type="submit" class="btn btn-primary btn-block">Salvar</button> -->
 									</div>
 								</div>
+								<?php echo form_close() ?>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<?php //var_dump($class)?>
+	<script>
+		var teacher = document.getElementById('teacher-select');
+		var teacherCount = teacher.options.length;
+		var subject = document.getElementById('subject-select');
+		var subjectCount = subject.options.length;
+		var period = document.getElementById('period-select');
+		var periodCount = period.options.length;
+		var campus = document.getElementById('campus-input');
+		var predio = document.getElementById('building-input');
+		var endereco = document.getElementById('address-input');
+		var numero = document.getElementById('number-input');
+		var horario_ini = document.getElementById('start-time-input');
+		var horario_fim = document.getElementById('end-time-input');
 
+		<?php if (!empty($class)): ?>
+		for (var i=0; i<teacherCount; i++){
+			if(teacher.options[i].innerHTML == "<?php echo $class['professor'] ?>"){
+				teacher.options[i].selected = true;
+				break;
+			}
+		}
+		for (var i=0; i<subjectCount; i++) {
+			if (subject.options[i].innerHTML == "<?php echo $class['turma'] ?>") {
+				subject.options[i].selected = true;
+				break;
+			}
+		}
+		for (var i=0; i<periodCount; i++) {
+			if (period.options[i].innerHTML == "<?php echo $class['periodo'] ?>") {
+				period.options[i].selected = true;
+				break;
+			}
+		}
+		campus.value = "<?php echo $class['campus'] ?>";
+		predio.value = "<?php echo $class['predio'] ?>";
+		endereco.value = "<?php echo $class['endereco'] ?>";
+		numero.value = "<?php echo $class['sala'] ?>";
+		horario_ini.value = "<?php echo $class['horario_ini'] ?>";
+		horario_fim.value = "<?php echo $class['horario_fim'] ?>";
+
+
+		<?php endif;?>
+	</script>
 	<script type="application/javascript" src="<?php echo base_url('assets/js/jquery-3.3.1.min.js') ?>"></script>
 	<script type="application/javascript" src="<?php echo base_url('assets/js/popper.min.js') ?>"></script>
 	<script type="application/javascript" src="<?php echo base_url('assets/js/bootstrap.js') ?>"></script>
