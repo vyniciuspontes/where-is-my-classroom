@@ -84,62 +84,62 @@ class Admin extends CI_Controller
         redirect(base_url());
     }
 
-    private function montaTabelaBy($aux)
-    {
-        //echo $aux; echo '<br>';
-        if ((int) $aux) {
-            $turmas = $this->Classroom_model->getTurmasByUserId($aux);
-        } else {
-            $turmas = $this->Classroom_model->getTurmasByName($aux);
-            //print_r($turmas);
-        }
-        //echo "teste "; var_dump(isset($turmas));
-        if (!empty($turmas)) {
-            $this->load->library('table');
-            $this->table->set_heading('Turma', 'Campus', 'Predio', 'Sala');
-            foreach ($turmas as $turma) {
-                $table_row = null;
-                $table_row[] = $turma["Turma"];
-                $table_row[] = $turma["Campus"];
-                $table_row[] = $turma["Predio"];
-                $table_row[] = $turma["Sala"];
-                if ($this->session->userdata('logged')) {
-                    $table_row[] = anchor('user/user/setTurma/' . $turma["Id"], 'Adicionar');
-                    $table_row[] = anchor('user/user/removeTurma/' . $turma["Id"], 'Remover');
-                }
+    // private function montaTabelaBy($aux)
+    // {
+    //     //echo $aux; echo '<br>';
+    //     if ((int) $aux) {
+    //         $turmas = $this->Classroom_model->getTurmasByUserId($aux);
+    //     } else {
+    //         $turmas = $this->Classroom_model->getTurmasByName($aux);
+    //         //print_r($turmas);
+    //     }
+    //     //echo "teste "; var_dump(isset($turmas));
+    //     if (!empty($turmas)) {
+    //         $this->load->library('table');
+    //         $this->table->set_heading('Turma', 'Campus', 'Predio', 'Sala');
+    //         foreach ($turmas as $turma) {
+    //             $table_row = null;
+    //             $table_row[] = $turma["Turma"];
+    //             $table_row[] = $turma["Campus"];
+    //             $table_row[] = $turma["Predio"];
+    //             $table_row[] = $turma["Sala"];
+    //             if ($this->session->userdata('logged')) {
+    //                 $table_row[] = anchor('user/user/setTurma/' . $turma["Id"], 'Adicionar');
+    //                 $table_row[] = anchor('user/user/removeTurma/' . $turma["Id"], 'Remover');
+    //             }
 
-                $this->table->add_row($table_row);
-            }
-            return $this->table->generate();
-        }
-        return '';
-    }
+    //             $this->table->add_row($table_row);
+    //         }
+    //         return $this->table->generate();
+    //     }
+    //     return '';
+    // }
 
-    public function addTurma()
-    {
-        $data['user_id'] = $this->session->userdata('user_id');
-        $data['table'] = $this->session->userdata('table');
-        $this->load->view('user/home.phtml', $data);
-    }
+    // public function addTurma()
+    // {
+    //     $data['user_id'] = $this->session->userdata('user_id');
+    //     $data['table'] = $this->session->userdata('table');
+    //     $this->load->view('user/home.phtml', $data);
+    // }
 
-    public function setTurma($id)
-    {
-        $data = array(
-            'user_id' => $this->session->userdata('user_id'),
-            'classroom_id' => $id,
-        );
-        $this->db->insert('student_classroom', $data);
-        redirect(site_url('user/user'));
-    }
-    public function removeTurma($id)
-    {
-        $data = array(
-            'user_id' => $this->session->userdata('user_id'),
-            'classroom_id' => $id,
-        );
-        $this->db->delete('student_classroom', $data);
-        redirect(site_url('user/user'));
-    }
+    // public function setTurma($id)
+    // {
+    //     $data = array(
+    //         'user_id' => $this->session->userdata('user_id'),
+    //         'classroom_id' => $id,
+    //     );
+    //     $this->db->insert('student_classroom', $data);
+    //     redirect(site_url('user/user'));
+    // }
+    // public function removeTurma($id)
+    // {
+    //     $data = array(
+    //         'user_id' => $this->session->userdata('user_id'),
+    //         'classroom_id' => $id,
+    //     );
+    //     $this->db->delete('student_classroom', $data);
+    //     redirect(site_url('user/user'));
+    // }
     public function editTurma()
     {
         //$data = $this->input->post("teacher-select");
@@ -148,5 +148,33 @@ class Admin extends CI_Controller
         }
         $this->Classroom_model->updateClassroom($data);
         redirect('admin/admin');
+    }
+    public function modalSubject()
+    {
+        foreach ($_POST as $key => $value) {
+            $data[$key] = $this->input->post($key);
+        }
+        if ($data["action"] == 'edit') {
+            $this->Classroom_model->updateSubject($data);
+        } else if ($data["action"] == 'delete'){
+            $this->Classroom_model->deleteSubject($data);
+        } else if ($data["action"] == 'create') {
+            $this->Classroom_model->createSubject($data);
+        }
+        redirect('admin/admin/subjects');
+    }
+    public function modalPeriod(){
+        foreach ($_POST as $key => $value) {
+            $data[$key] = $this->input->post($key);
+        }
+        var_dump($data);
+        if ($data["action"] == 'edit') {
+            $this->Classroom_model->updatePeriod($data);
+        } else if ($data["action"] == 'delete'){
+            $this->Classroom_model->deletePeriod($data);
+        } else if ($data["action"] == 'create') {
+            $this->Classroom_model->createPeriod($data);
+        }
+        redirect('admin/admin/periods');
     }
 }

@@ -172,23 +172,27 @@ class Classroom_model extends CI_Model
         return $dropdown;
     }
 
-    public function getTeacherAsDropdown(){
+    public function getTeacherAsDropdown()
+    {
         $this->db->select('id, name');
         $options = $this->db->get('teacher')->result();
-        return  $this->getOptionsAsDropdown($options, 'o Professor');
+        return $this->getOptionsAsDropdown($options, 'o Professor');
     }
-    public function getSubjectAsDropdown(){
+    public function getSubjectAsDropdown()
+    {
         $this->db->select('id, name');
         $options = $this->db->get('subject')->result();
         return $this->getOptionsAsDropdown($options, 'a Matéria');
     }
-    public function getPeriodAsDropdown(){
+    public function getPeriodAsDropdown()
+    {
         $this->db->select('id, name');
         $options = $this->db->get('period')->result();
         return $this->getOptionsAsDropdown($options, 'o Período');
     }
 
-    public function updateClassroom($data){
+    public function updateClassroom($data)
+    {
         $values = array(
             'teacher_id' => $data["teacher_id"],
             'subject_id' => $data["subject_id"],
@@ -196,37 +200,85 @@ class Classroom_model extends CI_Model
             'building' => $data["building"],
             'number' => $data["number"],
             'address' => $data["address"],
-            'period_id' => $data["period_id"]
+            'period_id' => $data["period_id"],
         );
         $this->db->where('id', $data["id"]);
         $this->db->update('classroom', $values);
 
         $time = array(
             'start_time' => $data["start_time"],
-            'end_time' => $data["end_time"]
+            'end_time' => $data["end_time"],
         );
         $this->db->where('classroom_id', $data["id"]);
         $this->db->update('classroom_week_day', $time);
 
     }
 
-    public function getSubjectByName($data){
+    //CRUD SUBJECT
+    public function getSubjectByName($data)
+    {
         $this->db->select('*');
         $this->db->from('subject');
         $this->db->like('name', $data, 'both');
         return $this->db->get()->result();
     }
-    public function getTeacherByName($data){
+    public function updateSubject($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+            'code' => $data["code"],
+        );
+        $this->db->where('id', $data["id"]);
+        $this->db->update('subject', $values);
+    }
+    public function deleteSubject($data)
+    {
+        $this->db->delete('subject', array('id' => $data["id"]));
+    }
+    public function createSubject($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+            'code' => $data["code"],
+        );
+        $this->db->insert('subject', $values);
+    }
+
+    //CRUD TEACHER
+    public function getTeacherByName($data)
+    {
         $this->db->select('*');
         $this->db->from('teacher');
         $this->db->like('name', $data, 'both');
         return $this->db->get()->result();
     }
-    public function getPeriodByName($data){
+    
+    //CRUD PERIOD
+    public function getPeriodByName($data)
+    {
         $this->db->select('*');
         $this->db->from('period');
         $this->db->like('name', $data, 'both');
         return $this->db->get()->result();
+    }
+    public function updatePeriod($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+        );
+        $this->db->where('id', $data["id"]);
+        $this->db->update('period', $values);
+    }
+    public function deletePeriod($data)
+    {
+        $this->db->delete('period', array('id' => $data["id"]));
+    }
+    public function createPeriod($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+        );
+        $this->db->insert('period', $values);
     }
 
 }
