@@ -71,17 +71,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 			<div class="col-md-12">
 				<div class="list-group">
-				<?php if(!empty($table)) : ?>
-					<?php foreach($table as $row): ?>
+				<?php if (!empty($table)): ?>
+					<?php foreach ($table as $row): ?>
 					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start" data-toggle="modal" data-target="#exampleModalCenter">
 						<div class="d-inline-flex justify-content-between">
-							<h5 class="mb-1" data-js="teacher-name"><?php echo $row->name?></h5>
+							<h5 class="mb-1" data-js="teacher-name"><?php echo $row->name ?></h5>
 						</div>
-						<img src="<?php echo $row->img_url?>" style="max-width:90px; height:auto" class="rounded float-right">
+						<img src="<?php echo site_url() . $row->img_url ?>" data-js="teacher-image" style="max-width:90px; height:auto" class="rounded float-right">
+						<!-- <img src="<?php echo site_url() . 'teacherimage/Leonardo_Murtaball.png' ?>" data-js="teacher-image" style="max-width:90px; height:auto" class="rounded float-right"> -->
 						<p class="mb-1">Professor Adjunto</p>
+						<p data-js="id" hidden><?php echo $row->id ?></p>
 					</a>
-					<?php endforeach; ?>
-				<?php endif; ?>
+					<?php endforeach;?>
+				<?php endif;?>
 
 				</div>
 			</div>
@@ -99,7 +101,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					</button>
 				</div>
 				<div class="modal-body">
-					<form>
+					<?php echo form_open_multipart('admin/admin/modalTeacher', 'id="form-modal"') ?>
+						<input name="action" id="action" hidden/>
 						<div class="form-group">
 							<label for="name">Nome</label>
 							<input class="form-control" type="text" name="name" placeholder="Nome" required>
@@ -108,16 +111,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
               			<label for="teacherImage">Foto</label>
 							<div class="input-group mb-3">
 								<div class="custom-file">
-									<input type="file" class="custom-file-input" id="teacherImage" aria-describedby="inputGroupFileAddon01">
+									<input type="file" class="custom-file-input" id="teacherImage" name="teacherImage" aria-describedby="inputGroupFileAddon01">
 									<label class="custom-file-label" id="teacherImageLabel" for="teacherImage">Selecione um arquivo</label>
 								</div>
 							</div>
 						</div>
+						<input name="id" hidden>
 						<div class="modal-footer">
-              				<button type="button" data-js="delete-button" class="btn btn-danger mr-auto">Deletar</button>
-							<button type="submit" class="btn btn-primary">Salvar</button>
+							<?php echo form_submit('', 'Deletar', 'data-js="delete-button", class="btn btn-danger mr-auto", id="bDelete"') ?>
+							<?php echo form_submit('', 'Salvar', 'class="btn btn-primary", id="bSave"') ?>
 						</div>
-						</form>
+					<?php echo form_close() ?>
 				</div>
 			</div>
 		</div>
@@ -137,6 +141,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         var modalImgLabel = modal.find("#teacherImageLabel").first();
 
         var modalTitle = modal.find('#modal-title').first();
+		var modalIdInput = modal.find('.modal-body input[name="id"]').first();
         var modalNameInput = modal.find('.modal-body input[name="name"]').first();
 
         function resetInput(){
@@ -146,9 +151,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         //add button clicked
         $('[data-js="create-button"').click(function(){
-          resetInput();
-          deleteButton.hide();
-          modal.modal('show');
+			resetInput();
+			deleteButton.hide();
+			modal.modal('show');
+			var action = document.getElementById('action');
+			action.value = 'create';
         });
 
         modalImgInput.change(function() {
@@ -157,11 +164,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         //list item clicked
         $('.list-group-item').click(function() {
-          deleteButton.show();
-          var elem = $( this );
-          var teacherName = elem.find('[data-js="teacher-name"]').text()
-          modalTitle.text(teacherName);
-          modalNameInput.val(teacherName);
+        	deleteButton.show();
+        	var elem = $( this );
+			var id = elem.find('[data-js="id"]').text();
+        	var teacherName = elem.find('[data-js="teacher-name"]').text()
+			var action = document.getElementById('action');
+			var bSave = document.getElementById('bSave');
+			var bDelete = document.getElementById('bDelete');
+			bSave.addEventListener('click', function(){
+				action.value = 'edit'
+			});
+			bDelete.addEventListener('click', function(){
+				action.value = 'delete'
+			});
+			modalTitle.text(teacherName);
+        	modalNameInput.val(teacherName);
+			modalIdInput.val(id);
         });
 
       })(jQuery);

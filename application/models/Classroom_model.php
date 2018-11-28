@@ -252,6 +252,26 @@ class Classroom_model extends CI_Model
         $this->db->like('name', $data, 'both');
         return $this->db->get()->result();
     }
+    public function updateTeacher($data){
+        $values["name"] = $data["name"];
+        if ($data["boolean"] == true){
+            $values["img_url"] = $data["path"];
+        }
+        $this->db->where('id', $data["id"]);
+        $this->db->update('teacher', $values);
+    }
+    public function deleteTeacher($data)
+    {
+        $this->db->delete('teacher', array('id' => $data["id"]));
+    }
+    public function createTeacher($data)
+    {
+        $values['name'] = $data["name"];
+        if ($data["boolean"] == true){
+            $values["img_url"] = $data["path"];
+        }
+        $this->db->insert('teacher', $values);
+    }
     
     //CRUD PERIOD
     public function getPeriodByName($data)
