@@ -148,19 +148,36 @@ class Admin extends CI_Controller
 
     public function editTurma()
     {
-        //$data = $this->input->post("teacher-select");
         foreach ($_POST as $key => $value) {
             $data[$key] = $this->input->post($key);
+        }
+        $y =0;
+        for ($i = 1; $i <= 6; $i++) {
+            if (isset($data['weekDayOptions' . $i])) {
+                $data['week_day'][$y] = $i;
+                $y++;
+            }
         }
         $this->Classroom_model->updateClassroom($data);
         redirect('admin/admin');
     }
-    public function createTurma(){
-        echo 'ola';
+    public function createTurma()
+    {
         foreach ($_POST as $key => $value) {
             $data[$key] = $this->input->post($key);
         }
-        var_dump($data);
+        $y = 0;
+        for ($i = 1; $i <= 6; $i++) {
+            if (isset($data['weekDayOptions' . $i])) {
+                $data['week_day'][$y] = $i;
+                $y++;
+            }
+        }
+        $this->Classroom_model->createClassroom($data);
+        redirect('admin/admin');
     }
-
+    public function deleteTurma($id){
+        $this->Classroom_model->deleteClassroom($id);
+        redirect('admin/admin');
+    }
 }

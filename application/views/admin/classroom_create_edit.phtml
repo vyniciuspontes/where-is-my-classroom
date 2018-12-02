@@ -80,20 +80,20 @@
 								<div class="form-row">
 									<div class="form-group col-md-4">
 										<label for="teacher-select">Professor</label>
-										<select class="custom-select" id="teacher-select"  name="teacher_id">
+										<select class="custom-select" id="teacher-select"  name="teacher_id" required>
 											<?php echo $teacherDropdown ?>
 										</select>
 									</div>
 									<!-- TODO implementar ajax para pegar matéria de acordo com o professor -->
 									<div class="form-group col-md-4">
 										<label for="subject-select">Matéria</label>
-										<select class="custom-select" id="subject-select" name="subject_id">
+										<select class="custom-select" id="subject-select" name="subject_id" required>
 											<?php echo $subjectDropdown ?>
 										</select>
 									</div>
 									<div class="form-group col-md-4">
 										<label for="period-select">Período</label>
-										<select class="custom-select" id="period-select" name="period_id">
+										<select class="custom-select" id="period-select" name="period_id" required>
 											<?php echo $periodDropdown ?>
 										</select>
 									</div>
@@ -177,7 +177,10 @@
 			</div>
 		</div>
 	</div>
-	<?php //var_dump($class)?>
+	<?php 
+	$teste = explode(', ', $class['dia']);
+	var_dump($teste);
+	?>
 	<script>
 		var teacher = document.getElementById('teacher-select');
 		var teacherCount = teacher.options.length;
@@ -211,13 +214,31 @@
 				break;
 			}
 		}
+		<?php
+		$dias = explode(", ", $class['dia']);
+		$optionDia[] = '';
+		$i = 0;
+		foreach($dias as $dia): ?>
+			if ("<?php echo $dia?>" == "Segunda"){
+				document.getElementById('firstWeekDay1').checked = true;
+			} else if ("<?php echo $dia?>" == "Terça"){
+				document.getElementById('firstWeekDay2').checked = true;
+			} else if ("<?php echo $dia?>" == "Quarta"){
+				document.getElementById('firstWeekDay3').checked = true;
+			}else if ("<?php echo $dia?>" == "Quinta"){
+				document.getElementById('firstWeekDay4').checked = true;
+			}else if ("<?php echo $dia?>" == "Sexta"){
+				document.getElementById('firstWeekDay5').checked = true;
+			}else if ("<?php echo $dia?>" == "Sábado"){
+				document.getElementById('firstWeekDay6').checked = true;
+			}
+		<?php endforeach; ?>
 		campus.value = "<?php echo $class['campus'] ?>";
 		predio.value = "<?php echo $class['predio'] ?>";
 		endereco.value = "<?php echo $class['endereco'] ?>";
 		numero.value = "<?php echo $class['sala'] ?>";
 		horario_ini.value = "<?php echo $class['horario_ini'] ?>";
 		horario_fim.value = "<?php echo $class['horario_fim'] ?>";
-
 
 		<?php endif;?>
 	</script>

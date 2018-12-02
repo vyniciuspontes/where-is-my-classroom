@@ -28,11 +28,11 @@ class Classroom_model extends CI_Model
         $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
-        $this->db->group_by(array("teacher.id", "subject.id"));
+        $this->db->group_by(array("teacher.id", "subject.id", "classroom_week_day.start_time"));
         if (!$param) {
             $query = $this->db->get();
             return $query;
-        } else if ((int) $param) {
+        } else if ((int)$param) {
             $this->db->where('student_classroom.user_id', $param);
         } else {
             $this->db->like('subject.name', $param, 'both');
@@ -114,6 +114,7 @@ class Classroom_model extends CI_Model
         if (!empty($collection->result())) {
             $className = $this->getTableArray($collection);
         }
+        //var_dump($className);
         return $className;
     }
 
@@ -150,7 +151,6 @@ class Classroom_model extends CI_Model
         $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
-        $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
         $this->db->where('classroom.id', $id);
         $collection = $this->db->get();
         //echo $this->db->last_query();
@@ -190,7 +190,8 @@ class Classroom_model extends CI_Model
         $options = $this->db->get('period')->result();
         return $this->getOptionsAsDropdown($options, 'o Período');
     }
-
+    
+    //CRUD TURMA
     public function updateClassroom($data)
     {
         $values = array(
@@ -205,13 +206,48 @@ class Classroom_model extends CI_Model
         $this->db->where('id', $data["id"]);
         $this->db->update('classroom', $values);
 
-        $time = array(
-            'start_time' => $data["start_time"],
-            'end_time' => $data["end_time"],
-        );
-        $this->db->where('classroom_id', $data["id"]);
-        $this->db->update('classroom_week_day', $time);
+        $this->db->delete('classroom_week_day', array('classroom_id' => $data["id"]));
+        var_dump($data);
+        $count = count($data['week_day']);
+        for ($i = 0; $i < $count; $i++) {
+            $time = array(
+                'classroom_id' => $data['id'],
+                'week_day_id' => $data['week_day'][$i],
+                'start_time' => $data['start_time'],
+                'end_time' => $data['end_time']
+            );
+            $this->db->insert('classroom_week_day', $time);
+        }
 
+    }
+    public function createClassRoom($data)
+    {
+        $values = array(
+            'teacher_id' => $data['teacher_id'],
+            'subject_id' => $data['subject_id'],
+            'period_id' => $data['period_id'],
+            'campus' => $data['campus'],
+            'building' => $data['building'],
+            'address' => $data['address'],
+            'number' => $data['number']
+        );
+        $this->db->insert('classroom', $values);
+        $last_id = $this->db->insert_id();
+        $count = count($data['week_day']);
+        for ($i = 0; $i < $count; $i++) {
+            $time = array(
+                'classroom_id' => $last_id,
+                'week_day_id' => $data['week_day'][$i],
+                'start_time' => $data['start_time'],
+                'end_time' => $data['end_time']
+            );
+            $this->db->insert('classroom_week_day', $time);
+        }
+    }
+    public function deleteClassroom($id){
+        $this->db->delete('classroom_week_day', array('classroom_id' => $id));
+        $this->db->delete('student_classroom', array('classroom_id' => $id));
+        $this->db->delete('classroom', array('id' => $id));
     }
 
     //CRUD SUBJECT
@@ -252,9 +288,10 @@ class Classroom_model extends CI_Model
         $this->db->like('name', $data, 'both');
         return $this->db->get()->result();
     }
-    public function updateTeacher($data){
+    public function updateTeacher($data)
+    {
         $values["name"] = $data["name"];
-        if ($data["boolean"] == true){
+        if ($data["boolean"] == true) {
             $values["img_url"] = $data["path"];
         }
         $this->db->where('id', $data["id"]);
@@ -267,7 +304,7 @@ class Classroom_model extends CI_Model
     public function createTeacher($data)
     {
         $values['name'] = $data["name"];
-        if ($data["boolean"] == true){
+        if ($data["boolean"] == true) {
             $values["img_url"] = $data["path"];
         }
         $this->db->insert('teacher', $values);
