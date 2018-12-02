@@ -38,7 +38,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><span class="navbar-text">
-							<?php echo $this->db->get_where('user', array('id' => $user_id))->row()->first_name ?></span></li>
+							<?php echo $this->session->userdata('user_firstname') ?></span></li>
 					<li class="nav-item pl-3">
 						<button class='form-control link-button' onclick="window.location='<?php echo site_url('/admin/admin/logout') ?>'">Logout</button>
 					</li>
@@ -62,7 +62,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						<!-- <button class="btn btn-primary">Procurar</button> -->
 					</div>
 					<div class="col-md-1">
-						<a type="button" class="btn btn-success" href="<?php echo site_url('admin/admin/classroom') ?>">Criar</a>
+						<a type="button" class="btn btn-success" href="<?php echo site_url('admin/admin/classroom/null/create') ?>">Criar</a>
 					</div>
 				</div>
 			</div>

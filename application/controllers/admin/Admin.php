@@ -17,6 +17,7 @@ class Admin extends CI_Controller
         //$this->load->view('admin/classroom_create_edit.phtml');
 
         $data['user_id'] = $this->session->userdata('user_id');
+        $data['user_firstname'] = $this->session->userdata('user_firstname');
         $data['table'] = $this->Classroom_model->getTurmas();
 
         $this->load->view('admin/home.phtml', $data);

@@ -30,9 +30,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </button>
   			<div class="collapse navbar-collapse" id="navbarNav">
   				<ul class="navbar-nav mr-auto">
+          <?php
+          
+          if ($this->session->userdata('is_admin') != null) {
+            if ($this->session->userdata('is_admin')) {
+              $title = 'Turmas';
+              $link = site_url('admin/Admin');
+              $logout = site_url('/admin/admin/logout');
+            } else{
+              $title = 'Minhas Turmas';
+              $link = site_url('user/User');
+              $logout = site_url('/user/user/logout');
+            }
+          
+          ?>
   					<li>
-  						<a href="<?php echo site_url('user/User') ?>" class="nav-link">Minhas Turmas</a>
+  						<a href="<?php echo $link ?>" class="nav-link"><?php echo $title ?></a>
   					</li>
+          <?php }?>
   				</ul>
 
   				<ul class="navbar-nav ml-auto">
@@ -44,9 +59,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <?php echo form_close(); ?>
                 </li>
             <?php else : ?>
-                <li class="nav-item"><span class="navbar-text"><?php echo $this->db->get_where('user', array('id' => $user_id))->row()->first_name ?></span></li>
+                <li class="nav-item"><span class="navbar-text"><?php echo $this->session->userdata('user_firstname') ?></span></li>
                 <li class="nav-item pl-3">
-                <button class='form-control link-button' onclick="window.location='<?php echo site_url('/user/user/logout') ?>'">Logout</button>
+                <button class='form-control link-button' onclick="window.location='<?php echo $logout ?>'">Logout</button>
             <?php endif; ?>
   				</ul>
   			</div>
@@ -98,12 +113,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     } else{ console.log('nao esta marcado');}
                   });
               </script>
-              <?php if (!empty($table_user)) : ?>
-                <?php foreach ($table_user as $tu) : ?>
-                    <?php if ($tu["id"] == $row["id"]) : ?>
-                      <script> checkbox.checked = true;</script>
-                    <?php endif;?>
-                <?php endforeach;?> 
+              <?php if ($this->session->userdata('is_admin') == 0) : ?>
+                <?php if (!empty($table_user)) : ?>
+                  <?php foreach ($table_user as $tu) : ?>
+                      <?php if ($tu["id"] == $row["id"]) : ?>
+                        <script> checkbox.checked = true;</script>
+                      <?php endif; ?>
+                  <?php endforeach; ?> 
+                <?php endif; ?>
               <?php endif;?>
             </div>
           </div>

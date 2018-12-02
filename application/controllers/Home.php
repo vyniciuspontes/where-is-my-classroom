@@ -56,7 +56,7 @@ class Home extends CI_Controller
 			$query = $this->db->get_where('user', array('email' => $login, 'password' => $senha));
 			$row = $query->row();
 			if (isset($row)) {
-				$data = array('user_id' => $row->id, 'logged' => true);
+				$data = array('user_id' => $row->id, 'user_firstname' => $row->first_name, 'is_admin' => $row->is_admin,'logged' => true);
 				$this->session->set_userdata($data);
 				if ($row->is_admin == 1) {
 					redirect('admin/admin');
