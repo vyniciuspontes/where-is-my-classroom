@@ -54,7 +54,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 				<div class="form-row justify-content-center">
 					<div class="col-md-10">
 						<!--TODO:fazer isso funcionar-->
-						<?php echo form_open('Home/searchTurma'); ?>
+						<?php echo form_open('admin/admin/searchTurma'); ?>
 						<input class="form-control" name="search">
 					</div>
 					<div class="col-md-1">
@@ -69,21 +69,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			</div>
 		</div>
 		<div class="row mt-4 justify-content-center">
-
+			
 			<div class="col-md-12">
 				<div class="list-group">
-          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" data-toggle="modal" data-target="#exampleModalCenter">
-            <div class="d-inline-flex justify-content-between">
-              <h5 class="mb-1" data-js="subject-name">Programação de Computadores I</h5>
-            </div>
-            <p class="mb-1" data-js="code">12312312321</p>
-          </a>
-          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" data-toggle="modal" data-target="#exampleModalCenter">
-            <div class="d-inline-flex justify-content-between">
-              <h5 class="mb-1" data-js="subject-name">Engenharia De Software I</h5>
-            </div>
-            <p class="mb-1" data-js="code">12312321312</p>
-          </a>
+					<?php if(!empty($table)): ?>
+					<?php foreach($table as $row) : ?>
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start" data-toggle="modal" data-target="#exampleModalCenter">
+						<div class="d-inline-flex justify-content-between">
+							<h5 class="mb-1" data-js="subject-name"><?php echo $row->name ?></h5>
+						</div>
+						<p class="mb-1" data-js="code"><?php echo $row->code ?></p>
+						<p data-js="id" hidden><?php echo $row->id ?></p>
+					</a>
+					<?php endforeach; ?>
+				<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -100,7 +99,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					</button>
 				</div>
 				<div class="modal-body">
-					<form>
+					<?php echo form_open('admin/admin/modalSubject', 'id="form-modal"') ?>
+						<input name="action" id="action" hidden/>
 						<div class="form-group">
 							<label for="name">Nome</label>
 							<input class="form-control" type="text" name="name" placeholder="Nome" required>
@@ -109,11 +109,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 							<label for="code">Código</label>
 							<input class="form-control" type="text" name="code" placeholder="Código" required>
 						</div>
+						<input name="id" hidden>
 						<div class="modal-footer">
-							<button type="button" data-js="delete-button" class="btn btn-danger mr-auto">Deletar</button>
-							<button type="submit" class="btn btn-primary">Salvar</button>
+							<?php echo form_submit('', 'Deletar', 'data-js="delete-button", class="btn btn-danger mr-auto", id="bDelete"') ?>
+							<?php echo form_submit('', 'Salvar', 'class="btn btn-primary", id="bSave"') ?>
 						</div>
-						<form>
+					<?php echo form_close()?>
 				</div>
 			</div>
 		</div>
@@ -131,6 +132,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			var deleteButton = modal.find('[data-js="delete-button"]').first();
 
 			var modalTitle = modal.find('#modal-title').first();
+			var modalIdInput = modal.find('.modal-body input[name="id"]').first();
 			var modalNameInput = modal.find('.modal-body input[name="name"]').first();
 			var modalCodeInput = modal.find('.modal-body input[name="code"]').first();
 
@@ -144,15 +146,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
 				resetInput();
 				deleteButton.hide();
 				modal.modal('show');
+				var action = document.getElementById('action');
+				action.value = 'create';
 			});
 
 			//list item clicked
 			$('.list-group-item').click(function() {
 				deleteButton.show();
 				var elem = $( this );
+				var id = elem.find('[data-js="id"]').text();
 				var subjectName = elem.find('[data-js="subject-name"]').text();
 				var code = elem.find('[data-js="code"]').text();
+				var action = document.getElementById('action');
+				var bSave = document.getElementById('bSave');
+				var bDelete = document.getElementById('bDelete');
+				bSave.addEventListener('click', function(){
+					action.value = 'edit'
+				});
+				bDelete.addEventListener('click', function(){
+					action.value = 'delete'
+				});
+				
 				modalTitle.text(subjectName);
+				modalIdInput.val(id);
 				modalNameInput.val(subjectName);
 				modalCodeInput.val(code);
 			});

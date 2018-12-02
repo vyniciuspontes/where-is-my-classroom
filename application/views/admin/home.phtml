@@ -62,7 +62,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						<!-- <button class="btn btn-primary">Procurar</button> -->
 					</div>
 					<div class="col-md-1">
+<<<<<<< HEAD
 						<a type="button" class="btn btn-success" href="<?php echo site_url('admin/admin/classroom/null/create') ?>">Criar</a>
+=======
+						<a type="button" class="btn btn-success" href="<?php echo site_url('admin/admin/classroom/'. $id = -1 .'/criar') ?>">Criar</a>
+>>>>>>> c3d82e890795e28898de4e335f0f9b54ffa8ce47
 					</div>
 				</div>
 			</div>
@@ -93,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 							<p class="card-text">
 								<?php echo $row["sala"] ?>
 							</p>
-							<a type="button" class="btn btn-success" href="<?php echo site_url('admin/admin/classroom/'.$row['id'].'/editar') ?>">Editar</a>
+							<a type="button" class="btn btn-success" href="<?php echo site_url('admin/admin/classroom/'.$row["id"].'/editar') ?>">Editar</a>
 							<button type="button" class="btn btn-danger">Excluir</button>
 						</div>
 					</div>

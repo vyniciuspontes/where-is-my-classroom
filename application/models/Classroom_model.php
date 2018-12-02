@@ -14,6 +14,8 @@ class Classroom_model extends CI_Model
         classroom.number as number,
         classroom.campus as campus,
         classroom.building as building,
+        classroom.address as address,
+        period.name as period,
         GROUP_CONCAT(distinct week_day.name order by week_day.id ASC SEPARATOR "," ) as wdays,
         classroom_week_day.start_time,
         classroom_week_day.end_time,
@@ -23,13 +25,14 @@ class Classroom_model extends CI_Model
         //$this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
         $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
+        $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
         $this->db->group_by(array("teacher.id", "subject.id"));
         if (!$param) {
             $query = $this->db->get();
             return $query;
-        } else if ((int)$param) {
+        } else if ((int) $param) {
             $this->db->where('student_classroom.user_id', $param);
         } else {
             $this->db->like('subject.name', $param, 'both');
@@ -50,6 +53,8 @@ class Classroom_model extends CI_Model
         classroom.number as number,
         classroom.campus as campus,
         classroom.building as building,
+        classroom.address as address,
+        period.name as period,
         GROUP_CONCAT(distinct week_day.name order by week_day.id ASC SEPARATOR "," ) as wdays,
         classroom_week_day.start_time,
         classroom_week_day.end_time,
@@ -64,6 +69,7 @@ class Classroom_model extends CI_Model
         $this->db->from('classroom');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
         $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
+        $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
         $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
@@ -93,6 +99,8 @@ class Classroom_model extends CI_Model
                 'campus' => $row->campus,
                 'predio' => $row->building,
                 'sala' => $row->number,
+                'endereco' => $row->address,
+                'periodo' => $row->period,
             );
             $i++;
         }
@@ -103,7 +111,7 @@ class Classroom_model extends CI_Model
     {
         $collection = $this->joinQuery(0);
         $className[] = '';
-        if(!empty($collection->result())){
+        if (!empty($collection->result())) {
             $className = $this->getTableArray($collection);
         }
         return $className;
@@ -112,7 +120,6 @@ class Classroom_model extends CI_Model
     public function getTurmasByUserId($id, $queryString)
     {
         $collection = $this->getDetalhesTurmasUsuario($id, $queryString);
-        $i = 0;
         $className[] = '';
         if (!empty($collection->result())) {
             $className = $this->getTableArray($collection);
@@ -127,7 +134,7 @@ class Classroom_model extends CI_Model
         $i = 0;
         //var_dump($name->result());
         $className[] = '';
-        if(!empty($collection->result())){
+        if (!empty($collection->result())) {
             $className = $this->getTableArray($collection);
         }
         // print_r($className);
@@ -140,12 +147,158 @@ class Classroom_model extends CI_Model
         $this->db->from('classroom');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
         $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
+        $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
         $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
         $this->db->where('classroom.id', $id);
-        return $this->db->get();
+        $collection = $this->db->get();
+        //echo $this->db->last_query();
+        $className[] = '';
+        if (!empty($collection->result())) {
+            $className = $this->getTableArray($collection);
+        }
+        return $className;
     }
 
+    public function getOptionsAsDropdown($options, $optionName)
+    {
+        $dropdown = '<option value="">Selecione ' . $optionName . '</option>';
+        if (count($options) > 0) {
+            foreach ($options as $option) {
+                $dropdown .= '<option value="' . $option->id . '">' . $option->name . '</option>';
+            }
+        }
+        return $dropdown;
+    }
+
+    public function getTeacherAsDropdown()
+    {
+        $this->db->select('id, name');
+        $options = $this->db->get('teacher')->result();
+        return $this->getOptionsAsDropdown($options, 'o Professor');
+    }
+    public function getSubjectAsDropdown()
+    {
+        $this->db->select('id, name');
+        $options = $this->db->get('subject')->result();
+        return $this->getOptionsAsDropdown($options, 'a Matéria');
+    }
+    public function getPeriodAsDropdown()
+    {
+        $this->db->select('id, name');
+        $options = $this->db->get('period')->result();
+        return $this->getOptionsAsDropdown($options, 'o Período');
+    }
+
+    public function updateClassroom($data)
+    {
+        $values = array(
+            'teacher_id' => $data["teacher_id"],
+            'subject_id' => $data["subject_id"],
+            'campus' => $data["campus"],
+            'building' => $data["building"],
+            'number' => $data["number"],
+            'address' => $data["address"],
+            'period_id' => $data["period_id"],
+        );
+        $this->db->where('id', $data["id"]);
+        $this->db->update('classroom', $values);
+
+        $time = array(
+            'start_time' => $data["start_time"],
+            'end_time' => $data["end_time"],
+        );
+        $this->db->where('classroom_id', $data["id"]);
+        $this->db->update('classroom_week_day', $time);
+
+    }
+
+    //CRUD SUBJECT
+    public function getSubjectByName($data)
+    {
+        $this->db->select('*');
+        $this->db->from('subject');
+        $this->db->like('name', $data, 'both');
+        return $this->db->get()->result();
+    }
+    public function updateSubject($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+            'code' => $data["code"],
+        );
+        $this->db->where('id', $data["id"]);
+        $this->db->update('subject', $values);
+    }
+    public function deleteSubject($data)
+    {
+        $this->db->delete('subject', array('id' => $data["id"]));
+    }
+    public function createSubject($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+            'code' => $data["code"],
+        );
+        $this->db->insert('subject', $values);
+    }
+
+    //CRUD TEACHER
+    public function getTeacherByName($data)
+    {
+        $this->db->select('*');
+        $this->db->from('teacher');
+        $this->db->like('name', $data, 'both');
+        return $this->db->get()->result();
+    }
+    public function updateTeacher($data){
+        $values["name"] = $data["name"];
+        if ($data["boolean"] == true){
+            $values["img_url"] = $data["path"];
+        }
+        $this->db->where('id', $data["id"]);
+        $this->db->update('teacher', $values);
+    }
+    public function deleteTeacher($data)
+    {
+        $this->db->delete('teacher', array('id' => $data["id"]));
+    }
+    public function createTeacher($data)
+    {
+        $values['name'] = $data["name"];
+        if ($data["boolean"] == true){
+            $values["img_url"] = $data["path"];
+        }
+        $this->db->insert('teacher', $values);
+    }
+    
+    //CRUD PERIOD
+    public function getPeriodByName($data)
+    {
+        $this->db->select('*');
+        $this->db->from('period');
+        $this->db->like('name', $data, 'both');
+        return $this->db->get()->result();
+    }
+    public function updatePeriod($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+        );
+        $this->db->where('id', $data["id"]);
+        $this->db->update('period', $values);
+    }
+    public function deletePeriod($data)
+    {
+        $this->db->delete('period', array('id' => $data["id"]));
+    }
+    public function createPeriod($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+        );
+        $this->db->insert('period', $values);
+    }
 
 }
