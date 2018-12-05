@@ -100,6 +100,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
               <p class="card-text"><?php echo $row["sala"] ?></p>
               <a href="#" class="card-link">Google Maps</a>
               <div class="custom-control custom-checkbox float-right">
+                <!-- Cada $row da $table_row precisa ter alguma propriedade checked=true/false que deve ser inserida
+                  no controller antes de vir pra ca -->
                 <input type="checkbox" class="custom-control-input subscriptionCheckbox" id="customCheck<?php echo $key ?>">
                 <label class="custom-control-label" for="customCheck<?php echo $key ?>">Inscrito</label>
               </div>
