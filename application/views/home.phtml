@@ -31,7 +31,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   			<div class="collapse navbar-collapse" id="navbarNav">
   				<ul class="navbar-nav mr-auto">
           <?php
-          
+
           if ($this->session->userdata('is_admin') != null) {
             if ($this->session->userdata('is_admin')) {
               $title = 'Turmas';
@@ -42,7 +42,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
               $link = site_url('user/User');
               $logout = site_url('/user/user/logout');
             }
-          
+
           ?>
   					<li>
   						<a href="<?php echo $link ?>" class="nav-link"><?php echo $title ?></a>
@@ -100,28 +100,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
               <p class="card-text"><?php echo $row["sala"] ?></p>
               <a href="#" class="card-link">Google Maps</a>
               <div class="custom-control custom-checkbox float-right">
-                <input type="checkbox" class="custom-control-input" id="customCheck<?php echo $key ?>">
+                <input type="checkbox" class="custom-control-input subscriptionCheckbox" id="customCheck<?php echo $key ?>">
                 <label class="custom-control-label" for="customCheck<?php echo $key ?>">Inscrito</label>
               </div>
-              <script>
-                var checkbox = document.getElementById("customCheck<?php echo $key ?>");
-                checkbox.addEventListener("change", function(){
-                    //chama funcao para inserir/remover turma da tabela
-                    console.log(checkbox);
-                    if (checkbox.checked == true){
-                      console.log('esta marcado');
-                    } else{ console.log('nao esta marcado');}
-                  });
-              </script>
-              <?php if ($this->session->userdata('is_admin') == 0) : ?>
+              <!--<?php if ($this->session->userdata('is_admin') == 0) : ?>
                 <?php if (!empty($table_user)) : ?>
                   <?php foreach ($table_user as $tu) : ?>
                       <?php if ($tu["id"] == $row["id"]) : ?>
                         <script> checkbox.checked = true;</script>
                       <?php endif; ?>
-                  <?php endforeach; ?> 
+                  <?php endforeach; ?>
                 <?php endif; ?>
-              <?php endif;?>
+              <?php endif;?>-->
             </div>
           </div>
 
@@ -136,6 +126,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script type="application/javascript" src="<?php echo base_url('assets/js/jquery-3.3.1.min.js') ?>"></script>
 <script type="application/javascript" src="<?php echo base_url('assets/js/popper.min.js') ?>"></script>
 <script type="application/javascript" src="<?php echo base_url('assets/js/bootstrap.js') ?>"></script>
+
+<script>
+  $(".subscriptionCheckbox").change(function() {
+      if(this.checked) {
+          console.log(this.id + ' -> checked');
+      }else{
+        console.log(this.id + ' -> not checked');
+      }
+  });
+</script>
 
 </body>
 </html>
