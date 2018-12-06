@@ -338,4 +338,21 @@ class Classroom_model extends CI_Model
         $this->db->insert('period', $values);
     }
 
+    public function insertStudentclassroom($userId, $classroomId){
+        $data = array(
+            'user_id' => $userId,
+            'classroom_id' => $classroomId,
+        );
+        $this->db->insert('student_classroom', $data);
+
+    }
+    public function removeStudentclassroom($userId, $classroomId){
+        $data = array(
+            'user_id' => $userId,
+            'classroom_id' => $classroomId,
+        );
+        $this->db->delete('student_classroom', $data);
+
+    }
+
 }

@@ -17,6 +17,7 @@ class User extends CI_Controller
         $data['user_id'] = $this->session->userdata('user_id');
         $data['user_firstname'] = $this->session->userdata('user_firstname');
         $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
+        $this->session->set_userdata(array('table'=>$data['table']));
         $this->load->view('user/home.phtml', $data);
     }
     public function logout()
@@ -73,22 +74,19 @@ class User extends CI_Controller
         $this->addTurma();
     }
 
-    public function setTurma($id)
-    {
-        $data = array(
-            'user_id' => $this->session->userdata('user_id'),
-            'classroom_id' => $id,
-        );
-        $this->db->insert('student_classroom', $data);
-        redirect(site_url('user/user'));
+    
+    public function insertTurma(){
+        $userId = $this->session->userdata('user_id');
+        $classroomId = $this->input->post('id');
+        $this->Classroom_model->insertStudentclassroom($userId, $classroomId);
+        //$data = array('id'=>$id);
+        //echo json_encode($data);
     }
-    public function removeTurma($id)
-    {
-        $data = array(
-            'user_id' => $this->session->userdata('user_id'),
-            'classroom_id' => $id,
-        );
-        $this->db->delete('student_classroom', $data);
-        redirect(site_url('user/user'));
+    public function removeTurma(){
+        $userId = $this->session->userdata('user_id');
+        $classroomId = $this->input->post('id');
+        $this->Classroom_model->removeStudentclassroom($userId, $classroomId);
+        //$data = array('id'=>$id);
+        //echo json_encode($data);
     }
 }

@@ -32,18 +32,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
   				<ul class="navbar-nav mr-auto">
           <?php
 
-          if ($this->session->userdata('is_admin') != null) {
-            if ($this->session->userdata('is_admin')) {
-              $title = 'Turmas';
-              $link = site_url('admin/Admin');
-              $logout = site_url('/admin/admin/logout');
-            } else{
-              $title = 'Minhas Turmas';
-              $link = site_url('user/User');
-              $logout = site_url('/user/user/logout');
-            }
+if ($this->session->userdata('is_admin') != null) {
+    if ($this->session->userdata('is_admin')) {
+        $title = 'Turmas';
+        $link = site_url('admin/Admin');
+        $logout = site_url('/admin/admin/logout');
+    } else {
+        $title = 'Minhas Turmas';
+        $link = site_url('user/User');
+        $logout = site_url('/user/user/logout');
+    }
 
-          ?>
+    ?>
   					<li>
   						<a href="<?php echo $link ?>" class="nav-link"><?php echo $title ?></a>
   					</li>
@@ -52,17 +52,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
   				<ul class="navbar-nav ml-auto">
             <!--<li class="nav-item"><span class="navbar-text">Vynicius</span></li>-->
-            <?php if (!$this->session->userdata('logged')) : ?>
+            <?php if (!$this->session->userdata('logged')): ?>
                 <li class="nav-item pl-3">
                 <?php echo form_open('home/login'); ?>
                 <?php echo form_submit('', 'Login', "class='form-control link-button'"); ?>
                 <?php echo form_close(); ?>
                 </li>
-            <?php else : ?>
+            <?php else: ?>
                 <li class="nav-item"><span class="navbar-text"><?php echo $this->session->userdata('user_firstname') ?></span></li>
                 <li class="nav-item pl-3">
                 <button class='form-control link-button' onclick="window.location='<?php echo $logout ?>'">Logout</button>
-            <?php endif; ?>
+            <?php endif;?>
   				</ul>
   			</div>
   		</div>
@@ -88,8 +88,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     <div class="col-md-12">
       <div class="card-columns">
-        <?php if (!empty($table)) : ?>
-        <?php foreach ($table as $key => $row) : ?>
+        <?php if (!empty($table)): ?>
+        <?php foreach ($table as $key => $row): ?>
           <div class="card">
             <div class="card-body">
               <h3 class="card-title"><?php echo $row["turma"] ?></h3>
@@ -99,26 +99,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
               <p class="card-text"><?php echo $row["campus"] . ' - ' . $row["predio"] ?></p>
               <p class="card-text"><?php echo $row["sala"] ?></p>
               <a href="#" class="card-link">Google Maps</a>
+              <?php if ($this->session->userdata('logged') && $this->session->userdata('is_admin') == 0): ?>
               <div class="custom-control custom-checkbox float-right">
                 <!-- Cada $row da $table_row precisa ter alguma propriedade checked=true/false que deve ser inserida
                   no controller antes de vir pra ca -->
-                <input type="checkbox" class="custom-control-input subscriptionCheckbox" id="customCheck<?php echo $key ?>">
+                <input type="checkbox" class="custom-control-input subscriptionCheckbox" id="customCheck<?php echo $key ?>" name="<?php echo $row['id'] ?>" <?php echo $row['checked'] ?>>
                 <label class="custom-control-label" for="customCheck<?php echo $key ?>">Inscrito</label>
               </div>
-              <!--<?php if ($this->session->userdata('is_admin') == 0) : ?>
-                <?php if (!empty($table_user)) : ?>
-                  <?php foreach ($table_user as $tu) : ?>
-                      <?php if ($tu["id"] == $row["id"]) : ?>
-                        <script> checkbox.checked = true;</script>
-                      <?php endif; ?>
-                  <?php endforeach; ?>
-                <?php endif; ?>
-              <?php endif;?>-->
+              <?php endif;?>
+
             </div>
           </div>
 
-      <?php endforeach; ?>
-      <?php endif; ?>          </div>
+      <?php endforeach;?>
+      <?php endif;?>          </div>
         </div>
       </div>
     </div>
@@ -133,8 +127,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
   $(".subscriptionCheckbox").change(function() {
       if(this.checked) {
           console.log(this.id + ' -> checked');
+          id = this.name;
+          $.ajax({
+            url: '<?php echo site_url('user/User/insertTurma/') ?>',
+            method: 'post',
+            data: {id: id},
+            dataType: 'json',
+            success: function(response){
+              console.log('inserido');
+            },
+            error: function (request, status, error){
+              console.log(request.responseText);
+            }
+
+          })
       }else{
         console.log(this.id + ' -> not checked');
+        id = this.name;
+          $.ajax({
+            url: '<?php echo site_url('user/User/removeTurma/') ?>',
+            method: 'post',
+            data: {id: id},
+            dataType: 'json',
+            success: function(response){
+              alert('removido');
+            },
+            error: function (request, status, error){
+              console.log(request.responseText);
+            }
+
+          })
       }
   });
 </script>
