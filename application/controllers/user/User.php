@@ -17,6 +17,7 @@ class User extends CI_Controller
         $data['user_id'] = $this->session->userdata('user_id');
         $data['user_firstname'] = $this->session->userdata('user_firstname');
         $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
+        var_dump(empty($data['table']));
         $this->session->set_userdata(array('table'=>$data['table']));
         $this->load->view('user/home.phtml', $data);
     }
@@ -79,14 +80,26 @@ class User extends CI_Controller
         $userId = $this->session->userdata('user_id');
         $classroomId = $this->input->post('id');
         $this->Classroom_model->insertStudentclassroom($userId, $classroomId);
-        //$data = array('id'=>$id);
-        //echo json_encode($data);
+
+        $data['user_id'] = $this->session->userdata('user_id');
+        $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
+        $this->session->set_userdata(array('table'=>$data['table']));
+
+        $classroomName = $this->Classroom_model->getClassroomName($classroomId)->name;
+        $data = array('msg'=>'Turma ' .$classroomName. ' adicionada a lista.' );
+        echo json_encode($data);
     }
     public function removeTurma(){
         $userId = $this->session->userdata('user_id');
         $classroomId = $this->input->post('id');
         $this->Classroom_model->removeStudentclassroom($userId, $classroomId);
-        //$data = array('id'=>$id);
-        //echo json_encode($data);
+
+        $data['user_id'] = $this->session->userdata('user_id');
+        $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
+        $this->session->set_userdata(array('table'=>$data['table']));
+
+        $classroomName = $this->Classroom_model->getClassroomName($classroomId)->name;
+        $data = array('msg'=>'Turma ' .$classroomName. ' removida da lista.' );
+        echo json_encode($data);
     }
 }

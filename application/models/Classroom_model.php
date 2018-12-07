@@ -121,7 +121,7 @@ class Classroom_model extends CI_Model
     public function getTurmasByUserId($id, $queryString)
     {
         $collection = $this->getDetalhesTurmasUsuario($id, $queryString);
-        $className[] = '';
+        $className[] = null;
         if (!empty($collection->result())) {
             $className = $this->getTableArray($collection);
         }
@@ -278,6 +278,13 @@ class Classroom_model extends CI_Model
             'code' => $data["code"],
         );
         $this->db->insert('subject', $values);
+    }
+    public function getClassroomName($id){
+        $this->db->select('name');
+        $this->db->from('subject');
+        $this->db->join('classroom', 'classroom.subject_id = subject.id');
+        $this->db->where('classroom.id',$id );
+        return $this->db->get()->row();
     }
 
     //CRUD TEACHER

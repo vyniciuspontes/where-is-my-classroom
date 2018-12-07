@@ -99,15 +99,18 @@ class Home extends CI_Controller
 
     public function compareTurmas($table, $userTable)
     {
-        for ($i = 0; $i < count($table); $i++) {
-            for ($y = 0; $y < count($userTable); $y++) {
-                if ($table[$i]['id'] == $userTable[$y]['id']) {
-					$table[$i]['checked'] = 'checked';
-					break;
-                } else $table[$i]['checked'] = '';
+        //var_dump($userTable);
+        if (!empty($table) && !empty($userTable)) {
+            for ($i = 0; $i < count($table); $i++) {
+                for ($y = 0; $y < count($userTable); $y++) {
+                    if ($table[$i]['id'] == $userTable[$y]['id']) {
+                        $table[$i]['checked'] = 'checked';
+                        break;
+                    } else $table[$i]['checked'] = '';
+                }
             }
-		}
-		return $table;
+        }
+        return $table;
     }
 
 }

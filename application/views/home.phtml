@@ -134,7 +134,7 @@ if ($this->session->userdata('is_admin') != null) {
             data: {id: id},
             dataType: 'json',
             success: function(response){
-              console.log('inserido');
+              alert(response.msg);
             },
             error: function (request, status, error){
               console.log(request.responseText);
@@ -150,7 +150,7 @@ if ($this->session->userdata('is_admin') != null) {
             data: {id: id},
             dataType: 'json',
             success: function(response){
-              alert('removido');
+              alert(response.msg);
             },
             error: function (request, status, error){
               console.log(request.responseText);
